@@ -25,12 +25,16 @@ def option_third():
 
 @app.route("/open", methods=['GET', 'POST'])
 def open():
-    if request.method == 'POST':
+    if request.method == 'POST' and request.form['option1_pin'] != '':
         pin = request.form['option1_pin']
         actions = Option_1_Actions(pin)
-        return "Open" + actions.connect()
+        if actions.is_correct() is True:
+            #tutaj wchodzi jeżeli ma prawdę tj. jeżeli taki pin jest w bazie
+            return render_template('open.html', title="Open", option="first_open")
+        else:
+            return render_template('option1.html', title="Option First")
     else:
-        return render_template('option1.html')
+        return render_template('option1.html', title="Option First")
 
 
 if __name__ == '__main__':
