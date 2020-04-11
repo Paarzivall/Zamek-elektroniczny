@@ -2,7 +2,8 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <p>Opcja 2</p>
+            <img src="{{ url_for('video_feed') }}" class="mx-auto" id="videoEl">
+            <input type="button" class="btn btn-primary col-12 mt-2" value="Uzyskaj dostęp" onclick="location.href='verify3';" />
         </div>
     </div>
 {% endblock %}
