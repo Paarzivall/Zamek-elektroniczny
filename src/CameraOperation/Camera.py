@@ -2,8 +2,6 @@ import cv2
 import face_recognition
 
 
-
-
 class VideoCamera(object):
     def __init__(self):
         self.video = cv2.VideoCapture(0)
