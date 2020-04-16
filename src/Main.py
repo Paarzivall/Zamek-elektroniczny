@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, Response
-from src.Option_1_Actions import Option_1_Actions
-from src.Camera import VideoCamera
+from src.KeyboardOperation.Option_1_Actions import Option_1_Actions
+from src.CameraOperation.Camera import VideoCamera
+from src.SpreechOperation import Spreech
 app = Flask(__name__)
 video_stream = VideoCamera()
+
 
 
 @app.route('/')
@@ -54,11 +56,20 @@ def video_feed():
 
 @app.route('/verify3', methods=['GET', 'POST'])
 def check():
-    print(video_stream.get_action())
     if video_stream.get_action() is True:
+        video_stream.__del__()
         return option_third()
     else:
         return option_second()
+
+
+@app.route('/verify4', methods=['GET', 'POST'])
+def verify_spreech():
+    spr = Spreech.Spreech()
+    if spr.controller() is True:
+        return render_template('open.html', title="Open")
+    else:
+        return option_third()
 
 
 if __name__ == '__main__':
