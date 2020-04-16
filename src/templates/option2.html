@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% block body %}
-    <div class="container-fluid">
-        <div class="row">
-            <img src="{{ url_for('video_feed') }}" class="mx-auto" id="videoEl">
-            <input type="button" class="btn btn-primary col-12 mt-2" value="Uzyskaj dostęp" onclick="location.href='verify3';" />
+    {% if show == True %}
+        <div class="container-fluid">
+            <div class="row">
+                <img src="{{ url_for('video_feed') }}" class="mx-auto" id="videoEl">
+                <input type="button" class="btn btn-primary col-12 mt-2" value="Uzyskaj dostęp" onclick="location.href='verify3';" />
+            </div>
         </div>
-    </div>
+    {% else %}
+        <h1 class="text-center">403 - ACCESS DENIED</h1>
+    {% endif %}
 {% endblock %}

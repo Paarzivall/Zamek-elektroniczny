@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% block body %}
-    <div class="container-fluid">
-        <div class="row">
-            <input type="button" class="btn btn-primary col-4 mx-auto mt-2" value="Kliknij aby rozpocząć weryfikację głosową" onclick="location.href='verify4';" />
+    {% if show == True %}
+        <div class="container-fluid">
+            <div class="row">
+                <input type="button" class="btn btn-primary col-4 mx-auto mt-2" value="Kliknij aby rozpocząć weryfikację głosową" onclick="location.href='verify4';" />
+            </div>
         </div>
-    </div>
+    {% else %}
+        <h1 class="text-center">403 - ACCESS DENIED</h1>
+    {% endif %}
 {% endblock %}

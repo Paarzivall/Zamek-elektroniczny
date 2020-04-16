@@ -19,9 +19,12 @@ class Spreech(object):
         """
             hashuje piny żeby porównać z zapisanym w bazie
         """
-        hasher = hashlib.sha256()
-        hasher.update(bytes(str(pin.lower()), encoding="utf-8"))
-        return hasher.hexdigest()
+        try:
+            hasher = hashlib.sha256()
+            hasher.update(bytes(str(pin.lower()), encoding="utf-8"))
+            return hasher.hexdigest()
+        except AttributeError:
+            return None
 
     def get_password(self):
         # pin = self.hash_pin("litwo ojczyzno moja") # default password
