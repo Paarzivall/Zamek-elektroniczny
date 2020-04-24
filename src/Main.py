@@ -3,6 +3,7 @@ from src.KeyboardOperation.Option_1_Actions import Option_1_Actions
 from src.CameraOperation.Camera import VideoCamera
 from src.SpreechOperation import Spreech
 from src.Controller import FailedCounter
+from src.SpreechOperation import SpreechAnalyzer
 app = Flask(__name__)
 video_stream = VideoCamera()
 # licznik pod niepowodzenia logowania
@@ -31,6 +32,10 @@ def option_second():
 @app.route("/option3")
 def option_third():
     return render_template('option3.html', title="Option Third", show=True)
+
+@app.route("/option4")
+def option_fourth():
+    return render_template('option4.html', title="Option Fourth", show=True)
 
 
 @app.route("/verify1", methods=['GET', 'POST'])
@@ -77,12 +82,27 @@ def check():
 def verify_spreech():
     spr = Spreech.Spreech()
     if spr.controller() is True:
-        failed.__del__()
-        return render_template('open.html', title="Open", show=True)
+        failed.clear_count()
+        # return render_template('open.html', title="Open", show=True)
+        return option_fourth()
     else:
         failed.add()
         if failed.is_valid():
             return option_third()
+        else:
+            return block()
+
+
+@app.route('/verify5', methods=['GET', 'POST'])
+def analyze_spreech():
+    spreech = SpreechAnalyzer.SpreechAnalyzer()
+    if spreech.recognize() is True:
+        failed.clear_count()
+        return render_template('open.html', title="Open", show=True)
+    else:
+        failed.add()
+        if failed.is_valid():
+            return option_fourth()
         else:
             return block()
 

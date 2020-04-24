@@ -15,6 +15,9 @@ class FailedCounter(object):
     def __del__(self):
         del self.count
 
+    def clear_count(self):
+        self.count = 0
+
     def add(self):
         self.count += 1
 
