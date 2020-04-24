@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, stream_with_context
+from time import sleep
 from src.KeyboardOperation.Option_1_Actions import Option_1_Actions
 from src.CameraOperation.Camera import VideoCamera
 from src.SpreechOperation import Spreech
@@ -19,23 +20,42 @@ def main_page():
         return block()
 
 
+@app.route('/main_page')
+def main_p():
+    failed.clear_count()
+    return render_template('main_page.html', title="Main Page")
+
+
 @app.route("/option1")
 def option_first():
-    return render_template('option1.html', title="Option First", show=True)
+    if failed.is_valid():
+        return render_template('option1.html', title="Option First", show=True)
+    else:
+        return block()
 
 
 @app.route("/option2")
 def option_second():
-    return render_template('option2.html', title="Option Second", show=True)
+    if failed.is_valid():
+        return render_template('option2.html', title="Option Second", show=True)
+    else:
+        return block()
 
 
 @app.route("/option3")
 def option_third():
-    return render_template('option3.html', title="Option Third", show=True)
+    if failed.is_valid():
+        return render_template('option3.html', title="Option Third", show=True)
+    else:
+        return block()
+
 
 @app.route("/option4")
 def option_fourth():
-    return render_template('option4.html', title="Option Fourth", show=True)
+    if failed.is_valid():
+        return render_template('option4.html', title="Option Fourth", show=True)
+    else:
+        return block()
 
 
 @app.route("/verify1", methods=['GET', 'POST'])
@@ -63,6 +83,11 @@ def gen(camera):
 @app.route('/verify2')
 def video_feed():
     return Response(gen(video_stream), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.route("/block")
+def block():
+    return render_template('block.html', title="Blocked")
 
 
 @app.route('/verify3', methods=['GET', 'POST'])
@@ -107,9 +132,7 @@ def analyze_spreech():
             return block()
 
 
-@app.route("/block")
-def block():
-    return render_template('block.html', title="Blocked")
+
 
 
 if __name__ == '__main__':
