@@ -27,8 +27,8 @@ class Spreech(object):
             return None
 
     def get_password(self):
-        # pin = self.hash_pin("litwo ojczyzno moja") # default password
-        con = lite.connect('../databases/zamek_elektroniczny.db')
+        # pin = self._hash_pass("litwo ojczyzno moja") # default password
+        con = lite.connect('databases/zamek_elektroniczny.db')
         cur = con.cursor()
         cur.execute("select ID, PASSWORD FROM spreech_password")
         return str(cur.fetchall()[0][1])
@@ -42,3 +42,7 @@ class Spreech(object):
         except sr.UnknownValueError:
             # tutaj jakby mikrofon wykrył jakiś dziwny dźwięk ma nie robić nic
             pass
+
+if __name__ == '__main__':
+    ss = Spreech()
+    print(ss.controller())

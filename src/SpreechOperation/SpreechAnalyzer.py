@@ -3,7 +3,9 @@ import librosa.display
 from dtw import dtw
 from numpy.linalg import norm
 import pyaudio
-OUTPUT_FILE = '../sounds/tmp.wav'
+
+
+OUTPUT_FILE = 'sounds/tmp.wav'
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 32000
@@ -11,7 +13,7 @@ CHUNK = 960
 RECORD_SECONDS = 3
 
 
-class SpreechAnalyzer(object):
+class SpreechAnalyzer:
     def __init__(self):
         self.audio = pyaudio.PyAudio()
 
@@ -20,7 +22,7 @@ class SpreechAnalyzer(object):
         sample_format = pyaudio.paInt16  # 16 bits per sample
         channels = 2
         fs = 44100  # Record at 44100 samples per second
-        seconds = 3
+        seconds = 5
 
         print('Recording')
 
@@ -53,10 +55,10 @@ class SpreechAnalyzer(object):
         return self.controller()
 
     def controller(self):
-        y1, sr1 = librosa.load('../sounds/probka1.wav')
-        y3, sr3 = librosa.load('../sounds/probka2.wav')
-        y4, sr4 = librosa.load('../sounds/probka3.wav')
-        y2, sr2 = librosa.load('../sounds/tmp.wav')
+        y1, sr1 = librosa.load('sounds/probka1.wav')
+        y3, sr3 = librosa.load('sounds/probka2.wav')
+        y4, sr4 = librosa.load('sounds/probka3.wav')
+        y2, sr2 = librosa.load('sounds/tmp.wav')
 
         mfcc1 = librosa.feature.mfcc(y1, sr1)  # Computing MFCC values
         librosa.display.specshow(mfcc1)
@@ -83,3 +85,8 @@ class SpreechAnalyzer(object):
                     return True
                 else:
                     return False
+
+
+if __name__ == "__main__":
+    sa = SpreechAnalyzer()
+    print(sa.recognize())
