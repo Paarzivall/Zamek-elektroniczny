@@ -14,6 +14,9 @@ failed = FailedCounter.FailedCounter.get_instance()
 
 @app.route('/')
 def main_page():
+    """
+    :return: main page if failed counter is valid or blocking page if is not
+    """
     if failed.is_valid():
         return render_template('main_page.html', title="Main Page")
     else:
@@ -22,12 +25,20 @@ def main_page():
 
 @app.route('/main_page')
 def main_p():
+    """
+    method to clearing failed counter and opening main page
+    :return: main page
+    """
     failed.clear_count()
     return render_template('main_page.html', title="Main Page")
 
 
 @app.route("/option1")
 def option_first():
+    """
+
+    :return: form page id failed counter is valid or blocking page if is not
+    """
     if failed.is_valid():
         return render_template('option1.html', title="Option First", show=True)
     else:
@@ -36,6 +47,10 @@ def option_first():
 
 @app.route("/option2")
 def option_second():
+    """
+
+    :return: form page if failed counter is valid or blocking page if is not
+    """
     if failed.is_valid():
         return render_template('option2.html', title="Option Second", show=True)
     else:
@@ -44,6 +59,10 @@ def option_second():
 
 @app.route("/option3")
 def option_third():
+    """
+
+    :return: page with images from camera or blocking page
+    """
     if failed.is_valid():
         return render_template('option3.html', title="Option Third", show=True)
     else:
@@ -52,6 +71,10 @@ def option_third():
 
 @app.route("/option4")
 def option_fourth():
+    """
+
+    :return: page with starter for sound recognize mechanism
+    """
     if failed.is_valid():
         return render_template('option4.html', title="Option Fourth", show=True)
     else:
@@ -74,6 +97,11 @@ def verify1():
 
 
 def gen(camera):
+    """
+
+    :param camera: field in vebsite
+    :return: frame after recognize
+    """
     while True:
         frame = camera.get_frame()
         yield (b'--frame\r\n'
@@ -82,16 +110,28 @@ def gen(camera):
 
 @app.route('/verify2')
 def video_feed():
+    """
+
+    :return: converted frame to website
+    """
     return Response(gen(video_stream), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route("/block")
 def block():
+    """
+
+    :return: block page and starting website timeout mechanism
+    """
     return render_template('block.html', title="Blocked")
 
 
 @app.route('/verify3', methods=['GET', 'POST'])
 def check():
+    """
+    method to management and checking second method authentication
+    :return: next page if validation is valid or actual page if is not valid and failed counter is valid or blocked page
+    """
     if video_stream.get_action() is True:
         video_stream.__del__()
         return option_third()
@@ -105,6 +145,10 @@ def check():
 
 @app.route('/verify4', methods=['GET', 'POST'])
 def verify_spreech():
+    """
+    method to management and checking third method authentication
+    :return: next page if validation is valid or actual page if is not valid and failed counter is valid or blocked page
+    """
     spr = Spreech.Spreech()
     if spr.controller() is True:
         failed.clear_count()
@@ -120,6 +164,10 @@ def verify_spreech():
 
 @app.route('/verify5', methods=['GET', 'POST'])
 def analyze_spreech():
+    """
+    method to management and checking fourth method authentication
+    :return: next page if validation is valid or actual page if is not valid and failed counter is valid or blocked page
+    """
     spreech = SpreechAnalyzer.SpreechAnalyzer()
     if spreech.recognize() is True:
         failed.clear_count()
@@ -130,9 +178,6 @@ def analyze_spreech():
             return option_fourth()
         else:
             return block()
-
-
-
 
 
 if __name__ == '__main__':

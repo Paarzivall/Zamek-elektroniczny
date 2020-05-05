@@ -13,9 +13,16 @@ RECORD_SECONDS = 3
 
 class SpreechAnalyzer(object):
     def __init__(self):
+        """
+        initialize object to microphone management
+        """
         self.audio = pyaudio.PyAudio()
 
     def recognize(self):
+        """
+        recording for 3 second and save sample as tmp.wav
+        :return: method for checking valid sample
+        """
         chunk = 1024  # Record in chunks of 1024 samples
         sample_format = pyaudio.paInt16  # 16 bits per sample
         channels = 2
@@ -53,6 +60,10 @@ class SpreechAnalyzer(object):
         return self.controller()
 
     def controller(self):
+        """
+        method who checking voice samples
+        :return: True if sample is valid or False if samle is not valid
+        """
         y1, sr1 = librosa.load('../sounds/probka1.wav')
         y3, sr3 = librosa.load('../sounds/probka2.wav')
         y4, sr4 = librosa.load('../sounds/probka3.wav')
