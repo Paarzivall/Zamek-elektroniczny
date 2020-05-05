@@ -4,10 +4,17 @@ import hashlib
 
 
 class Spreech(object):
+    """
+    initialize recognition operation
+    """
     def __init__(self):
         self.recognizer = sr.Recognizer()
 
     def controller(self):
+        """
+        method to control operations
+        :return: True if password is valid or False if is not
+        """
         with sr.Microphone() as source:
             while 1:
                 if self.hash_password(self.listen_spreech(source)) == self.get_password():
@@ -17,7 +24,9 @@ class Spreech(object):
 
     def hash_password(self, pin):
         """
-            hashuje piny żeby porównać z zapisanym w bazie
+        method who hashing voice sample to checking in database
+        :param pin: converted voice sample to check
+        :return: hashing password
         """
         try:
             hasher = hashlib.sha256()
@@ -27,17 +36,25 @@ class Spreech(object):
             return None
 
     def get_password(self):
-        # pin = self._hash_pass("litwo ojczyzno moja") # default password
+        """
+        :return: password from database
+        """
+        # pin = self.hash_pin("litwo ojczyzno moja") # default password
         con = lite.connect('databases/zamek_elektroniczny.db')
+
         cur = con.cursor()
         cur.execute("select ID, PASSWORD FROM spreech_password")
         return str(cur.fetchall()[0][1])
 
     def listen_spreech(self, source):
+        """
+
+        :param source: microphone object
+        :return: converted voice to string
+        """
         try:
             audio = self.recognizer.listen(source)
             user = self.recognizer.recognize_google(audio, language="pl-PL")
-            print(user)
             return str(user)
         except sr.UnknownValueError:
             # tutaj jakby mikrofon wykrył jakiś dziwny dźwięk ma nie robić nic
