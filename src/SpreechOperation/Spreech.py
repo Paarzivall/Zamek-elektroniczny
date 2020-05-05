@@ -59,7 +59,3 @@ class Spreech(object):
         except sr.UnknownValueError:
             # tutaj jakby mikrofon wykrył jakiś dziwny dźwięk ma nie robić nic
             pass
-
-if __name__ == '__main__':
-    ss = Spreech()
-    print(ss.controller())

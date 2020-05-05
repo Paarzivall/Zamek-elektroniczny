@@ -3,9 +3,7 @@ import librosa.display
 from dtw import dtw
 from numpy.linalg import norm
 import pyaudio
-
-
-OUTPUT_FILE = 'sounds/tmp.wav'
+OUTPUT_FILE = '../sounds/tmp.wav'
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 32000
@@ -13,7 +11,7 @@ CHUNK = 960
 RECORD_SECONDS = 3
 
 
-class SpreechAnalyzer:
+class SpreechAnalyzer(object):
     def __init__(self):
         """
         initialize object to microphone management
@@ -29,7 +27,7 @@ class SpreechAnalyzer:
         sample_format = pyaudio.paInt16  # 16 bits per sample
         channels = 2
         fs = 44100  # Record at 44100 samples per second
-        seconds = 5
+        seconds = 3
 
         print('Recording')
 
@@ -61,12 +59,14 @@ class SpreechAnalyzer:
         wf.close()
         return self.controller()
 
+
     @staticmethod
     def controller():
         """
         method who checking voice samples
         :return: True if sample is valid or False if samle is not valid
         """
+
         y1, sr1 = librosa.load('sounds/probka1.wav')
         y3, sr3 = librosa.load('sounds/probka2.wav')
         y4, sr4 = librosa.load('sounds/probka3.wav')
@@ -97,8 +97,3 @@ class SpreechAnalyzer:
                     return True
                 else:
                     return False
-
-
-if __name__ == "__main__":
-    sa = SpreechAnalyzer()
-    print(sa.recognize())
