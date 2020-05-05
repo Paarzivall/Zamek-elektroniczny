@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 d-md-flex justify-content-md-center mt-2 mb-2 ml-2 mr-2">
+                <input type="button" style="height:40vh !important;" class="btn btn-outline-primary btn-lg col-12 col-md-4" value="Wpisz hasło" onclick="location.href='password';" />
+                <input type="button" style="height:40vh !important;" class="btn btn-outline-primary btn-lg col-12 col-md-4" {% if not user.pass_verified %}disabled{% endif %} value="Rozpoznawanie Twarzy" onclick="location.href='face';" />
+                <input type="button" style="height:40vh !important;" class="btn btn-outline-primary btn-lg col-12 col-md-4" {% if not user.face_verified %}disabled{% endif %} value="Weryfikacja dźwiękowa" onclick="location.href='speech';" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-md-flex justify-content-md-center mt-2 mb-2 ml-2 mr-2">
+                <input type="button" style="height:20vh !important;" class="btn btn-outline-primary btn-lg col-12 col-md-4" {% if not user.authenticated %}disabled{% endif %} value="Otworz" onclick="location.href='open';" />
+                <input type="button" style="height:20vh !important;" class="btn btn-outline-primary btn-lg col-12 col-md-4" {% if not user.pass_verified %}disabled{% endif %} value="Zamknij" onclick="location.href='close';" />
+            </div>
+        </div>
+        <div class="row" style="height: 40vh; overflow: scroll">
+            <div style="margin: 20px; width:40%; float:left">
+                {% for item in log.auth_logs %}
+                <p>{{ item }}<br>
+                {% endfor %}
+            </div>
+            <div style="margin: 20px; width:40%; float:right">
+                {% for item in log.state_logs %}
+                <p>{{ item }}<br>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

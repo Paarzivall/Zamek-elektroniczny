@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 from raspberry.keypad import Keypad
 from raspberry.db import Check
-
+#
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(21, GPIO.OUT)
@@ -86,9 +86,10 @@ class LockStateInfo:
 
 
 class UserAuthenticationInfo:
-    def __init__(self, who, success):
+    def __init__(self, who, success, level=''):
         self.who = who
         self.success = success
+        self.level = level
 
 
 class Lock:
@@ -175,7 +176,8 @@ class MasterLog:
             self.state_logs.append(msg)
             print(msg)
         elif isinstance(args, UserAuthenticationInfo):
-            msg = f'[Authentication Log] User {args.who} tried to log in with success: {args.success}'
+            msg = f'[Authentication Log] User {args.who} tried to log in with success: {args.success}, ' \
+                  f'auth-level: {args.level}'
             self.auth_logs.append(msg)
             print(msg)
 
