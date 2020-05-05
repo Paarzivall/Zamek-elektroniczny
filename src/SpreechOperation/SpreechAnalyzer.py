@@ -59,15 +59,18 @@ class SpreechAnalyzer(object):
         wf.close()
         return self.controller()
 
-    def controller(self):
+
+    @staticmethod
+    def controller():
         """
         method who checking voice samples
         :return: True if sample is valid or False if samle is not valid
         """
-        y1, sr1 = librosa.load('../sounds/probka1.wav')
-        y3, sr3 = librosa.load('../sounds/probka2.wav')
-        y4, sr4 = librosa.load('../sounds/probka3.wav')
-        y2, sr2 = librosa.load('../sounds/tmp.wav')
+
+        y1, sr1 = librosa.load('sounds/probka1.wav')
+        y3, sr3 = librosa.load('sounds/probka2.wav')
+        y4, sr4 = librosa.load('sounds/probka3.wav')
+        y2, sr2 = librosa.load('sounds/tmp.wav')
 
         mfcc1 = librosa.feature.mfcc(y1, sr1)  # Computing MFCC values
         librosa.display.specshow(mfcc1)

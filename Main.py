@@ -121,6 +121,9 @@ master_log = MasterLog(door_lock)
 @app.route('/')
 @app.route('/main_page')
 def main_page():
+    """
+    :return: main page if failed counter is valid or blocking page if is not
+    """
     if failed.is_valid():
         return render_template('main_page.html', title="Main Page", user=user, log=master_log)
     else:
@@ -129,6 +132,11 @@ def main_page():
 
 @app.route("/password", methods=['GET', 'POST'])
 def password_verification():
+    """
+    Display website with login form. If correct password is submitted redirects to main_page
+
+    :return: form page id failed counter is valid or blocking page if is not
+    """
     if failed.is_valid():
         form = LoginForm()
         if form.validate_on_submit():
@@ -148,6 +156,11 @@ def password_verification():
 
 @app.route("/speech")
 def speech_verification():
+    """
+    Starts speech verification, if speech is verified redirects to main_page
+
+    :return: redirects to main page or block page
+    """
     if failed.is_valid():
         spr = Spreech.Spreech()
         if spr.controller() is True:
@@ -163,6 +176,11 @@ def speech_verification():
 
 @app.route('/face')
 def face_verification():
+    """
+    Starts face recognition process, if face is verified redirects to main page.
+
+    :return: redirects to main page or block page
+    """
     cam = VideoCamera()
     cam.get_frame()
     if cam.action:
@@ -176,6 +194,11 @@ def face_verification():
 
 @app.route("/open")
 def open_lock():
+    """
+    Opens lock.
+
+    :returns: redirects to main page
+    """
     if user.authenticated:
         user.control_lock(Unlocked)
     return redirect(url_for('main_page'))
@@ -183,6 +206,11 @@ def open_lock():
 
 @app.route("/close")
 def close_lock():
+    """
+    Closes lock.
+
+    :returns: redirects to main page
+    """
     if user.pass_verified:
         user.control_lock(Locked)
 
@@ -214,11 +242,19 @@ def option_fourth():
 
 @app.route("/block")
 def block():
+    """
+
+    :return: block page and starting website timeout mechanism
+    """
     return render_template('block.html', title="Blocked")
 
 
 # @app.route('/verify5', methods=['GET', 'POST'])
 # def analyze_spreech():
+#     """
+#
+#     :return: page with starter for sound recognize mechanism
+#     """
 #     spreech = SpreechAnalyzer.SpreechAnalyzer()
 #     if spreech.recognize() is True:
 #         failed.clear_count()

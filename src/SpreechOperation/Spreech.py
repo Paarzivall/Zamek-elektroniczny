@@ -40,7 +40,8 @@ class Spreech(object):
         :return: password from database
         """
         # pin = self.hash_pin("litwo ojczyzno moja") # default password
-        con = lite.connect('../databases/zamek_elektroniczny.db')
+        con = lite.connect('databases/zamek_elektroniczny.db')
+
         cur = con.cursor()
         cur.execute("select ID, PASSWORD FROM spreech_password")
         return str(cur.fetchall()[0][1])
