@@ -248,6 +248,7 @@ def analyze_spreech():
     """
     spreech = SpreechAnalyzer()
     if spreech.recognize() is True:
+        user.speech2_verified = True
         failed.clear_count()
         return redirect(url_for('main_page'))
     else:
