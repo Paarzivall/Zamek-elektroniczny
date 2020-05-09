@@ -3,7 +3,7 @@ import librosa.display
 from dtw import dtw
 from numpy.linalg import norm
 import pyaudio
-OUTPUT_FILE = '../sounds/tmp.wav'
+
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 32000
@@ -11,7 +11,9 @@ CHUNK = 960
 RECORD_SECONDS = 3
 
 
-class SpreechAnalyzer(object):
+class SpreechAnalyzer:
+    OUTPUT_FILE = 'sounds/tmp.wav'
+
     def __init__(self):
         """
         initialize object to microphone management
@@ -51,7 +53,7 @@ class SpreechAnalyzer(object):
         print('Finished recording')
 
         # Save the recorded data as a WAV file
-        wf = wave.open(OUTPUT_FILE, 'wb')
+        wf = wave.open(self.OUTPUT_FILE, 'wb')
         wf.setnchannels(channels)
         wf.setsampwidth(self.audio.get_sample_size(sample_format))
         wf.setframerate(fs)
@@ -97,3 +99,12 @@ class SpreechAnalyzer(object):
                     return True
                 else:
                     return False
+
+
+if __name__ == '__main__':
+    spreech = SpreechAnalyzer()
+    if spreech.recognize() is True:
+        print('speech verified')
+
+    else:
+        print('not verified')

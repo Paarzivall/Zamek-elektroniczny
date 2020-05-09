@@ -4,7 +4,7 @@ from src.KeyboardOperation.Option_1_Actions import UserPasswordVerification
 from src.CameraOperation.Camera import VideoCamera
 from src.SpreechOperation import Spreech
 from src.Controller import FailedCounter
-# from src.SpreechOperation import SpreechAnalyzer
+from src.SpreechOperation.SpreechAnalyzer import SpreechAnalyzer
 from src.forms import LoginForm
 from raspberry.state import MasterLog, Lock, UserAuthenticationInfo, LockStateInfo, Locked, Unlocked, SetAngle, SetLED
 from raspberry.keypad import Keypad
@@ -25,7 +25,8 @@ class User:
         self.authentication_timeout = 180
         self._pass_verified = False
         self._face_verified = False
-        self._speech_verified = True
+        self._speech_verified = False
+        self._speech2_verified = False
         self._pin_verified = True
 
     @property
@@ -71,6 +72,19 @@ class User:
         self.lock.authentication(UserAuthenticationInfo(self.name, self._speech_verified, 'speech'))
 
     @property
+    def speech2_verified(self) -> bool:
+        return self._speech2_verified and self._authentication_time + self.authentication_timeout > time.time()
+
+    @speech2_verified.setter
+    def speech2_verified(self, val):
+        if val:
+            self._speech2_verified = val
+            self._authentication_time = time.time()
+        else:
+            self._speech2_verified = val
+        self.lock.authentication(UserAuthenticationInfo(self.name, self._speech2_verified, 'speech_analysis'))
+
+    @property
     def pin_verified(self) -> bool:
         return self._pin_verified and self._authentication_time + self.authentication_timeout > time.time()
 
@@ -85,7 +99,8 @@ class User:
 
     @property
     def authenticated(self):
-        return self.pin_verified and self.speech_verified and self.face_verified and self.pass_verified
+        return self.pin_verified and self.speech_verified and self.face_verified and self.pass_verified and \
+               self._speech2_verified
 
     def control_lock(self, state):
         args = LockStateInfo(self.name, state)
@@ -110,7 +125,6 @@ class User:
                 self.lock.authentication(UserAuthenticationInfo(self.name, self.authenticated, 'pin'))
                 break
             self.lock.authentication(UserAuthenticationInfo(self.name, self.authenticated, 'pin'))
-
 
 
 door_lock = Lock('main door')
@@ -217,29 +231,6 @@ def close_lock():
     return redirect(url_for('main_page'))
 
 
-@app.route("/option4")
-def option_fourth():
-    if failed.is_valid():
-        return render_template('option4.html', title="Option Fourth", show=True)
-    else:
-        return redirect(url_for('block'))
-
-
-# @app.route('/verify4', methods=['GET', 'POST'])
-# def verify_spreech():
-#     spr = Spreech.Spreech()
-#     if spr.controller() is True:
-#         failed.clear_count()
-#         # return render_template('open.html', title="Open", show=True)
-#         return option_fourth()
-#     else:
-#         failed.add()
-#         if failed.is_valid():
-#             return option_third()
-#         else:
-#             return redirect(url_for('block'))
-
-
 @app.route("/block")
 def block():
     """
@@ -249,22 +240,22 @@ def block():
     return render_template('block.html', title="Blocked")
 
 
-# @app.route('/verify5', methods=['GET', 'POST'])
-# def analyze_spreech():
-#     """
-#
-#     :return: page with starter for sound recognize mechanism
-#     """
-#     spreech = SpreechAnalyzer.SpreechAnalyzer()
-#     if spreech.recognize() is True:
-#         failed.clear_count()
-#         return render_template('open.html', title="Open", show=True)
-#     else:
-#         failed.add()
-#         if failed.is_valid():
-#             return option_fourth()
-#         else:
-#             return block()
+@app.route('/speech2', methods=['GET', 'POST'])
+def analyze_spreech():
+    """
+
+    :return: page with starter for sound recognize mechanism
+    """
+    spreech = SpreechAnalyzer()
+    if spreech.recognize() is True:
+        failed.clear_count()
+        return redirect(url_for('main_page'))
+    else:
+        failed.add()
+        if failed.is_valid():
+            return redirect(url_for('main_page'))
+        else:
+            return block()
 
 
 if __name__ == '__main__':
