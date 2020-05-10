@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, redirect, url_for
 import time
 from src.KeyboardOperation.Option_1_Actions import UserPasswordVerification
 from src.CameraOperation.Camera import VideoCamera
@@ -6,7 +6,7 @@ from src.SpreechOperation import Spreech
 from src.Controller import FailedCounter
 from src.SpreechOperation.SpreechAnalyzer import SpreechAnalyzer
 from src.forms import LoginForm
-from raspberry.state import MasterLog, Lock, UserAuthenticationInfo, LockStateInfo, Locked, Unlocked, SetAngle, SetLED
+from raspberry.state import MasterLog, Lock, UserAuthenticationInfo, LockStateInfo, Locked, Unlocked
 from raspberry.keypad import Keypad
 from src.DatabaseOperation.db import Check
 app = Flask(__name__)
@@ -27,7 +27,7 @@ class User:
         self._face_verified = False
         self._speech_verified = False
         self._speech2_verified = False
-        self._pin_verified = True
+        self._pin_verified = False
 
     @property
     def pass_verified(self) -> bool:
@@ -36,11 +36,9 @@ class User:
 
     @pass_verified.setter
     def pass_verified(self, val):
-        print('pass verified setter')
         if val:
             self._pass_verified = val
             self._authentication_time = time.time()
-            print('user verified with password')
         else:
             self._pass_verified = val
         self.lock.authentication(UserAuthenticationInfo(self.name, self._pass_verified, 'password'))
@@ -95,20 +93,22 @@ class User:
             self._authentication_time = time.time()
         else:
             self._pin_verified = val
-        self.lock.authentication(UserAuthenticationInfo(self.name, self._speech_verified, 'pin'))
+        self.lock.authentication(UserAuthenticationInfo(self.name, self._pin_verified, 'pin'))
 
     @property
     def authenticated(self):
-        return self.pin_verified and self.speech_verified and self.face_verified and self.pass_verified and \
-               self._speech2_verified
+        return self.speech_verified and self.face_verified and self.pass_verified and self._speech2_verified
 
-    def control_lock(self, state):
+    def control_lock(self, state, verification_attempts=0):
         args = LockStateInfo(self.name, state)
-        #self.authenticate()
-        self.lock.change(state, args)
+        if not self.pin_verified and verification_attempts < 2:
+            self.authenticate()
+            self.control_lock(state, verification_attempts=verification_attempts+1)
+        elif self.pin_verified:
+            self.lock.change(state, args)
 
     def authenticate(self):
-        for _ in range(3):
+        for _ in range(2):
             kp = Keypad(columnCount=3)
             seq = []
             for i in range(4):
@@ -121,10 +121,12 @@ class User:
             _pin = "".join([str(i) for i in seq])
             user_verification = Check(self.name, _pin)
             user_verified = user_verification.verified
+            self.pin_verified = user_verified
             if user_verified:
-                self.lock.authentication(UserAuthenticationInfo(self.name, self.authenticated, 'pin'))
-                break
-            self.lock.authentication(UserAuthenticationInfo(self.name, self.authenticated, 'pin'))
+                return True
+
+        else:
+            return False
 
 
 door_lock = Lock('main door')
@@ -261,6 +263,3 @@ def analyze_spreech():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-

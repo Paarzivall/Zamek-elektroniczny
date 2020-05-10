@@ -31,7 +31,6 @@ class UserPasswordVerification:
             db_record = db.read_password(self.user)
             if db_record is not None:
                 if db_record[-1] == self.passwd:
-                    print("user v.")
                     self._verified = True
                 else:
                     self._verified = False

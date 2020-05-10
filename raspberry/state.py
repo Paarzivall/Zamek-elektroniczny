@@ -1,8 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-from raspberry.keypad import Keypad
-from raspberry.db import Check
-#
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT)
 GPIO.setup(21, GPIO.OUT)
@@ -26,6 +24,7 @@ def SetAngle(angle):
     time.sleep(0.5)
     pwm.stop()
 
+
 def SetLED(color):
     if color == 'red':
         GPIO.output(21, GPIO.LOW)
@@ -33,6 +32,7 @@ def SetLED(color):
     if color == 'green':
         GPIO.output(26, GPIO.LOW)
         GPIO.output(21, GPIO.HIGH)
+
 
 class LockState:
     name = "state"
@@ -114,56 +114,6 @@ class Lock:
         self.events(args)
 
 
-class User:
-    authentication_timeout = 30  # s
-
-    def __init__(self, lock, name):
-        self.name = name
-        self.lock = lock
-        self._authenticated = None
-        self._authentication_time = None
-
-    @property
-    def authenticated(self) -> bool:
-        return self._authenticated and self._authentication_time + self.authentication_timeout > time.time()
-
-    @authenticated.setter
-    def authenticated(self, val):
-        if val:
-            self._authenticated = val
-            self._authentication_time = time.time()
-        else:
-            self._authentication_time = None
-
-    def control_lock(self, state):
-        if self.name is not None and self.authenticated is True:
-            args = LockStateInfo(self.name, state)
-            self.lock.change(state, args)
-        else:
-            self.authenticate()
-            self.control_lock(state)
-
-    def authenticate(self):
-        for _ in range(3):
-            kp = Keypad(columnCount=3)
-            seq = []
-            for i in range(4):
-                digit = None
-                while digit is None:
-                    digit = kp.getKey()
-                seq.append(digit)
-                print(digit)
-                time.sleep(0.4)
-            _pin = "".join([str(i) for i in seq])
-            user_verification = Check(self.name, _pin)
-            user_verified = user_verification.verified
-            if user_verified:
-                self.authenticated = True
-                self.lock.authentication(UserAuthenticationInfo(self.name, self.authenticated))
-                break
-            self.lock.authentication(UserAuthenticationInfo(self.name, self.authenticated))
-
-
 class MasterLog:
     def __init__(self, lock):
         lock.events.append(self.save_log)
@@ -182,34 +132,3 @@ class MasterLog:
             print(msg)
 
 
-if __name__ == "__main__":
-    door_lock = Lock('main door')
-    MasterLog(door_lock)
-
-
-    # door_lock.change(Locked)
-    # time.sleep(5)
-    # door_lock.change(Unlocked)
-    # time.sleep(5)
-    # door_lock.change(Unlocked)
-    # time.sleep(5)
-    # door_lock.change(Locked)
-    # time.sleep(5)
-    # door_lock.change(Locked)
-
-    user = User(door_lock, 'JohnDoe')
-    user.authenticate()
-    user.control_lock(Unlocked)
-    # user.control_lock(Unlocked)
-    user.control_lock(Locked)
-    #
-    # print('simulate login timeout')
-    # time.sleep(31)
-    #
-    # user.control_lock(Unlocked)
-
-    # door_lock.change(Unlocked)
-    # door_lock.change(Locked)
-    # door_lock.change(Unlocked)
-    # door_lock.change(Locked)
-    # door_lock.change(Locked)
