@@ -2,10 +2,12 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row">
-            <div class="col-12 d-md-flex justify-content-md-center mt-2 mb-2 ml-2 mr-2">
-                <input type="button" style="height:40vh !important;" class="btn btn-outline-primary btn-lg col-12 col-md-4" value="Wpisz hasło" onclick="location.href='password';" />
-                <input type="button" style="height:40vh !important;" class="btn btn-outline-primary btn-lg col-12 col-md-4" {% if not user.pass_verified %}disabled{% endif %} value="Rozpoznawanie Twarzy" onclick="location.href='face';" />
-                <input type="button" style="height:40vh !important;" class="btn btn-outline-primary btn-lg col-12 col-md-4" {% if not user.face_verified %}disabled{% endif %} value="Weryfikacja dźwiękowa" onclick="location.href='speech';" />
+            <div class="d-md-flex justify-content-md-center mt-2 mb-2 ml-2 mr-2 col-12">
+
+                <input type="button" class="btn btn-outline-primary btn-lg col-md-3 col-12" value="Wpisz hasło" onclick="location.href='password';" />
+                <input type="button" class="btn btn-outline-primary btn-lg col-md-3 col-12" {% if not user.pass_verified %}disabled{% endif %} value="Rozpoznawanie Twarzy" onclick="location.href='face';" />
+                <input type="button" class="btn btn-outline-primary btn-lg col-md-3 col-12" {% if not user.face_verified %}disabled{% endif %} value="Weryfikacja dźwiękowa" onclick="location.href='speech';" />
+                <input type="button" class="btn btn-outline-primary btn-lg col-md-3 col-12" {% if not user.speech_verified %}disabled{% endif %} value="Weryfikacja dźwiękowa2" onclick="location.href='speech2';" />
             </div>
         </div>
         <div class="row">

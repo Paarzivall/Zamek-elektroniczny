@@ -1,12 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, redirect, url_for
 import time
 from src.KeyboardOperation.Option_1_Actions import UserPasswordVerification
 from src.CameraOperation.Camera import VideoCamera
 from src.SpreechOperation import Spreech
 from src.Controller import FailedCounter
-# from src.SpreechOperation import SpreechAnalyzer
+from src.SpreechOperation.SpreechAnalyzer import SpreechAnalyzer
 from src.forms import LoginForm
-from raspberry.state import MasterLog, Lock, UserAuthenticationInfo, LockStateInfo, Locked, Unlocked, SetAngle, SetLED
+from raspberry.state import MasterLog, Lock, UserAuthenticationInfo, LockStateInfo, Locked, Unlocked
 from raspberry.keypad import Keypad
 from src.DatabaseOperation.db import Check
 app = Flask(__name__)
@@ -25,8 +25,9 @@ class User:
         self.authentication_timeout = 180
         self._pass_verified = False
         self._face_verified = False
-        self._speech_verified = True
-        self._pin_verified = True
+        self._speech_verified = False
+        self._speech2_verified = False
+        self._pin_verified = False
 
     @property
     def pass_verified(self) -> bool:
@@ -35,11 +36,9 @@ class User:
 
     @pass_verified.setter
     def pass_verified(self, val):
-        print('pass verified setter')
         if val:
             self._pass_verified = val
             self._authentication_time = time.time()
-            print('user verified with password')
         else:
             self._pass_verified = val
         self.lock.authentication(UserAuthenticationInfo(self.name, self._pass_verified, 'password'))
@@ -71,6 +70,19 @@ class User:
         self.lock.authentication(UserAuthenticationInfo(self.name, self._speech_verified, 'speech'))
 
     @property
+    def speech2_verified(self) -> bool:
+        return self._speech2_verified and self._authentication_time + self.authentication_timeout > time.time()
+
+    @speech2_verified.setter
+    def speech2_verified(self, val):
+        if val:
+            self._speech2_verified = val
+            self._authentication_time = time.time()
+        else:
+            self._speech2_verified = val
+        self.lock.authentication(UserAuthenticationInfo(self.name, self._speech2_verified, 'speech_analysis'))
+
+    @property
     def pin_verified(self) -> bool:
         return self._pin_verified and self._authentication_time + self.authentication_timeout > time.time()
 
@@ -81,19 +93,22 @@ class User:
             self._authentication_time = time.time()
         else:
             self._pin_verified = val
-        self.lock.authentication(UserAuthenticationInfo(self.name, self._speech_verified, 'pin'))
+        self.lock.authentication(UserAuthenticationInfo(self.name, self._pin_verified, 'pin'))
 
     @property
     def authenticated(self):
-        return self.pin_verified and self.speech_verified and self.face_verified and self.pass_verified
+        return self.speech_verified and self.face_verified and self.pass_verified and self._speech2_verified
 
-    def control_lock(self, state):
+    def control_lock(self, state, verification_attempts=0):
         args = LockStateInfo(self.name, state)
-        #self.authenticate()
-        self.lock.change(state, args)
+        if not self.pin_verified and verification_attempts < 2:
+            self.authenticate()
+            self.control_lock(state, verification_attempts=verification_attempts+1)
+        elif self.pin_verified:
+            self.lock.change(state, args)
 
     def authenticate(self):
-        for _ in range(3):
+        for _ in range(2):
             kp = Keypad(columnCount=3)
             seq = []
             for i in range(4):
@@ -106,11 +121,12 @@ class User:
             _pin = "".join([str(i) for i in seq])
             user_verification = Check(self.name, _pin)
             user_verified = user_verification.verified
+            self.pin_verified = user_verified
             if user_verified:
-                self.lock.authentication(UserAuthenticationInfo(self.name, self.authenticated, 'pin'))
-                break
-            self.lock.authentication(UserAuthenticationInfo(self.name, self.authenticated, 'pin'))
+                return True
 
+        else:
+            return False
 
 
 door_lock = Lock('main door')
@@ -217,29 +233,6 @@ def close_lock():
     return redirect(url_for('main_page'))
 
 
-@app.route("/option4")
-def option_fourth():
-    if failed.is_valid():
-        return render_template('option4.html', title="Option Fourth", show=True)
-    else:
-        return redirect(url_for('block'))
-
-
-# @app.route('/verify4', methods=['GET', 'POST'])
-# def verify_spreech():
-#     spr = Spreech.Spreech()
-#     if spr.controller() is True:
-#         failed.clear_count()
-#         # return render_template('open.html', title="Open", show=True)
-#         return option_fourth()
-#     else:
-#         failed.add()
-#         if failed.is_valid():
-#             return option_third()
-#         else:
-#             return redirect(url_for('block'))
-
-
 @app.route("/block")
 def block():
     """
@@ -249,26 +242,24 @@ def block():
     return render_template('block.html', title="Blocked")
 
 
-# @app.route('/verify5', methods=['GET', 'POST'])
-# def analyze_spreech():
-#     """
-#
-#     :return: page with starter for sound recognize mechanism
-#     """
-#     spreech = SpreechAnalyzer.SpreechAnalyzer()
-#     if spreech.recognize() is True:
-#         failed.clear_count()
-#         return render_template('open.html', title="Open", show=True)
-#     else:
-#         failed.add()
-#         if failed.is_valid():
-#             return option_fourth()
-#         else:
-#             return block()
+@app.route('/speech2', methods=['GET', 'POST'])
+def analyze_spreech():
+    """
+
+    :return: page with starter for sound recognize mechanism
+    """
+    spreech = SpreechAnalyzer()
+    if spreech.recognize() is True:
+        user.speech2_verified = True
+        failed.clear_count()
+        return redirect(url_for('main_page'))
+    else:
+        failed.add()
+        if failed.is_valid():
+            return redirect(url_for('main_page'))
+        else:
+            return block()
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-

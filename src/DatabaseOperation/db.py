@@ -63,6 +63,7 @@ class DataBase:
         cursor = self.conn.cursor()
         cursor.execute(f"select ID, USER, PIN from RECORDS where USER='{user}'")
         for ID, USER, PIN in cursor.fetchall():
+            print(ID, USER, PIN)
             return ID, USER, PIN
 
 
@@ -93,9 +94,10 @@ class DatabaseProxy(Proxy):
         return self.proxy_state
 
     def read_record(self, user):
-        if self.proxy_state is None:
+        if self.proxy_state_pin is None:
             self.db_object._existing()
             self.proxy_state_pin = self.db_object.read_record(user)
+        print(f"pin record: {self.proxy_state_pin}")
         return self.proxy_state_pin
 
     def __enter__(self):
@@ -104,15 +106,29 @@ class DatabaseProxy(Proxy):
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.db_object.conn.close()
 
+
 class Check:
     def __init__(self, name, passwd):
         self.name = name
         self.passwd = passwd
-        with DatabaseProxy(DataBase()) as read:
-            self.record = read.read_record(name)
+        with DatabaseProxy(DataBase('databases/zamek.db')) as read:
+            self.record = read.read_record(self.name)
+            print(self.record)
 
     @property
     def verified(self):
         if self.record is not None:
             return self.record[2] == self.passwd
         return False
+
+
+if __name__ == "__main__":
+    with DatabaseProxy(DataBase('databases/zamek.db')) as db:
+        db_record = db.read_password('JohnDoe')
+        print(db_record)
+
+    cc = Check('JohnDoe', '123#')
+    print(cc.verified)
+
+    with DataBase('databases/zamek.db') as db:
+        print(db.read_record('JohnDoe'))
