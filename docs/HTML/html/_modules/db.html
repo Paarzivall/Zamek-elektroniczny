@@ -1,0 +1,325 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>db &#8212; Zamek Elektroniczny 1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for db</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="DataBase"><a class="viewcode-back" href="../source/db.html#db.DataBase">[docs]</a><span class="k">class</span> <span class="nc">DataBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_filename</span><span class="o">=</span><span class="s1">&#39;Test.db&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method of DataBase class.</span>
+
+<span class="sd">        :param db_filename: defines path and name of db file</span>
+<span class="sd">        :type db_filename: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span> <span class="o">=</span> <span class="n">db_filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method enter for context manager. Call _existing method to setup db connection.</span>
+
+<span class="sd">        :return: self</span>
+<span class="sd">        :rtype: DataBase</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_existing</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_hash_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">passwd</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return hashed password.</span>
+
+<span class="sd">        :param passwd: password to be hashed</span>
+<span class="sd">        :type passwd: str</span>
+<span class="sd">        :return: hashed password</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pin = 1234 # default zapisany w bazie</span>
+        <span class="n">hasher</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+        <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">passwd</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">hasher</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_existing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if database with name defined in attribute db_filename exists, if not create new database with needed</span>
+<span class="sd">        tables and fill tables with default values.</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        :rtype:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;No schema exists.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;CREATE TABLE PASSWD_VERIFICATION</span>
+<span class="s1">                 (ID INT     NOT NULL,</span>
+<span class="s1">                 USER           TEXT    NOT NULL,</span>
+<span class="s1">                 PASSWORD             TEXT     NOT NULL);&#39;&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;CREATE TABLE RECORDS</span>
+<span class="s1">                 (ID INT     NOT NULL,</span>
+<span class="s1">                 USER           TEXT    NOT NULL,</span>
+<span class="s1">                 PIN             TEXT     NOT NULL);&#39;&#39;&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Table created successfully&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;INSERT INTO PASSWD_VERIFICATION (ID, USER, PASSWORD) VALUES (1, &#39;JohnDoe&#39;, &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash_pass</span><span class="p">(</span><span class="s1">&#39;pass&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;INSERT INTO RECORDS (ID, USER, PIN) VALUES (1, &#39;JohnDoe&#39;, &#39;123#&#39;)&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_filename</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DB exists.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DataBase.add_password"><a class="viewcode-back" href="../source/db.html#db.DataBase.add_password">[docs]</a>    <span class="k">def</span> <span class="nf">add_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="n">passwd</span><span class="o">=</span><span class="s2">&quot;0000&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds record to table &quot;PASSWD_VERIFICATION&quot; in database.</span>
+
+<span class="sd">        :param user: name of the user</span>
+<span class="sd">        :type user: str</span>
+<span class="sd">        :param passwd: password of the user</span>
+<span class="sd">        :type passwd: str</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;INSERT INTO PASSWD_VERIFICATION (ID, USER, PASSWORD) VALUES (1, &#39;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hash_pass</span><span class="p">(</span><span class="n">passwd</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataBase.read_password"><a class="viewcode-back" href="../source/db.html#db.DataBase.read_password">[docs]</a>    <span class="k">def</span> <span class="nf">read_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads record from the table &quot;PASSWD_VERIFICATION&quot; in database.</span>
+
+<span class="sd">        :param user: name of the user</span>
+<span class="sd">        :type user: str</span>
+<span class="sd">        :return: tuple with database record</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;checking in db&#39;</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;select ID, USER, PASSWORD from PASSWD_VERIFICATION where USER=&#39;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ID</span><span class="p">,</span> <span class="n">USER</span><span class="p">,</span> <span class="n">PASSWORD</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">ID</span><span class="p">,</span> <span class="n">USER</span><span class="p">,</span> <span class="n">PASSWORD</span></div>
+
+<div class="viewcode-block" id="DataBase.read_record"><a class="viewcode-back" href="../source/db.html#db.DataBase.read_record">[docs]</a>    <span class="k">def</span> <span class="nf">read_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Read record from the table &quot;RECORDS&quot; in database.</span>
+
+<span class="sd">        :param user: name of the user</span>
+<span class="sd">        :type user: str</span>
+<span class="sd">        :return: tuple with database record</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;checking in db&#39;</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;select ID, USER, PIN from RECORDS where USER=&#39;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ID</span><span class="p">,</span> <span class="n">USER</span><span class="p">,</span> <span class="n">PIN</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ID</span><span class="p">,</span> <span class="n">USER</span><span class="p">,</span> <span class="n">PIN</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ID</span><span class="p">,</span> <span class="n">USER</span><span class="p">,</span> <span class="n">PIN</span></div></div>
+
+
+<div class="viewcode-block" id="singleton"><a class="viewcode-back" href="../source/db.html#db.singleton">[docs]</a><span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="n">class_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function for decorating classes which need to be singleton.</span>
+
+<span class="sd">    :param class_: Decorated class which needs to be singleton.</span>
+<span class="sd">    :type class_: object</span>
+<span class="sd">    :return: instance of class</span>
+<span class="sd">    :rtype: object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">instances</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">getinstance</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">class_</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+            <span class="n">instances</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instances</span><span class="p">[</span><span class="n">class_</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">getinstance</span></div>
+
+
+<div class="viewcode-block" id="Proxy"><a class="viewcode-back" href="../source/db.html#db.Proxy">[docs]</a><span class="k">class</span> <span class="nc">Proxy</span><span class="p">:</span>
+    <span class="n">proxy_state</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">proxy_state_pin</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_object</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method for abstract Proxy class.</span>
+
+<span class="sd">        :param db_object: Instance of DataBase class</span>
+<span class="sd">        :type db_object: DataBase</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span> <span class="o">=</span> <span class="n">db_object</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProxy"><a class="viewcode-back" href="../source/db.html#db.DatabaseProxy">[docs]</a><span class="nd">@singleton</span>
+<span class="k">class</span> <span class="nc">DatabaseProxy</span><span class="p">(</span><span class="n">Proxy</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">read_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Proxy method for reading record with password for a given user.</span>
+
+<span class="sd">        :param user: name og the user</span>
+<span class="sd">        :type user: str</span>
+<span class="sd">        :return: DataBase record</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">_existing</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">read_password</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span>
+
+    <span class="k">def</span> <span class="nf">read_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Proxy method for reading record with pin for a given user.</span>
+
+<span class="sd">        :param user: name og the user</span>
+<span class="sd">        :type user: str</span>
+<span class="sd">        :return: DataBase record</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">_existing</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">read_record</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pin record: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Check"><a class="viewcode-back" href="../source/db.html#db.Check">[docs]</a><span class="k">class</span> <span class="nc">Check</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">passwd</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method for Check class which is used for pin verification.</span>
+
+<span class="sd">        :param name: name og the user</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param passwd: password provided by user</span>
+<span class="sd">        :type passwd: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">passwd</span> <span class="o">=</span> <span class="n">passwd</span>
+        <span class="k">with</span> <span class="n">DatabaseProxy</span><span class="p">(</span><span class="n">DataBase</span><span class="p">(</span><span class="s1">&#39;databases/zamek.db&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">read</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">record</span> <span class="o">=</span> <span class="n">read</span><span class="o">.</span><span class="n">read_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">verified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if password provided by user is equal with password from DataBase.</span>
+
+<span class="sd">        :return: verification result</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">record</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">passwd</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">DatabaseProxy</span><span class="p">(</span><span class="n">DataBase</span><span class="p">(</span><span class="s1">&#39;databases/zamek.db&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+        <span class="n">db_record</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_password</span><span class="p">(</span><span class="s1">&#39;JohnDoe&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">db_record</span><span class="p">)</span>
+
+    <span class="n">cc</span> <span class="o">=</span> <span class="n">Check</span><span class="p">(</span><span class="s1">&#39;JohnDoe&#39;</span><span class="p">,</span> <span class="s1">&#39;123#&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">cc</span><span class="o">.</span><span class="n">verified</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">DataBase</span><span class="p">(</span><span class="s1">&#39;databases/zamek.db&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">db</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">read_record</span><span class="p">(</span><span class="s1">&#39;JohnDoe&#39;</span><span class="p">))</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Zamek Elektroniczny</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Alicja Gałaszkiewicz Mateusz Bugaj.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

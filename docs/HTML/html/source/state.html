@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>state module &#8212; Zamek Elektroniczny 1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-state">
+<span id="state-module"></span><h1>state module<a class="headerlink" href="#module-state" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="state.Event">
+<em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">Event</code><a class="reference internal" href="../_modules/state.html#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="state.Lock">
+<em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">Lock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class representing a lock</p>
+<dl class="py method">
+<dt id="state.Lock.authentication">
+<code class="sig-name descname">authentication</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Lock.authentication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Lock.authentication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls Mediator events when user is authenticated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference internal" href="#state.UserAuthenticationInfo" title="state.UserAuthenticationInfo"><em>UserAuthenticationInfo</em></a>) – Contains information which user tries to log in and on which level.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="state.Lock.change">
+<code class="sig-name descname">change</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">args</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Lock.change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Lock.change" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the lock state and calls Mediator events.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<a class="reference internal" href="#state.LockState" title="state.LockState"><em>LockState</em></a>) – define state which needs to be set.</p></li>
+<li><p><strong>args</strong> (<a class="reference internal" href="#state.LockStateInfo" title="state.LockStateInfo"><em>LockStateInfo</em></a>) – Instance of LockStateInfo.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="state.LockState">
+<em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">LockState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#LockState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.LockState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="state.LockState.allowed">
+<code class="sig-name descname">allowed</code><em class="property"> = []</em><a class="headerlink" href="#state.LockState.allowed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="state.LockState.name">
+<code class="sig-name descname">name</code><em class="property"> = 'state'</em><a class="headerlink" href="#state.LockState.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="state.LockState.switch">
+<code class="sig-name descname">switch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#LockState.switch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.LockState.switch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switch state of the Lock to the new state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>state</strong> (<a class="reference internal" href="#state.LockState" title="state.LockState"><em>LockState</em></a>) – define state (Locked, Unlocked)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="state.LockStateInfo">
+<em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">LockStateInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">who_change</span></em>, <em class="sig-param"><span class="n">lock_action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#LockStateInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.LockStateInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="state.Locked">
+<em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">Locked</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Locked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Locked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#state.LockState" title="state.LockState"><code class="xref py py-class docutils literal notranslate"><span class="pre">state.LockState</span></code></a></p>
+<dl class="py attribute">
+<dt id="state.Locked.allowed">
+<code class="sig-name descname">allowed</code><em class="property"> = ['unlocked']</em><a class="headerlink" href="#state.Locked.allowed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="state.Locked.name">
+<code class="sig-name descname">name</code><em class="property"> = 'locked'</em><a class="headerlink" href="#state.Locked.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="state.Locked.servo_angle">
+<code class="sig-name descname">servo_angle</code><em class="property"> = 0</em><a class="headerlink" href="#state.Locked.servo_angle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="state.MasterLog">
+<em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">MasterLog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#MasterLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.MasterLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="state.MasterLog.save_log">
+<code class="sig-name descname">save_log</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#MasterLog.save_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.MasterLog.save_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method prints logs and saves them to proper attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference internal" href="#state.LockStateInfo" title="state.LockStateInfo"><em>LockStateInfo</em></a><em> or </em><a class="reference internal" href="#state.UserAuthenticationInfo" title="state.UserAuthenticationInfo"><em>UserAuthenticationInfo</em></a>) – Information which need to be printed and stored in state_logs or auth_logs.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="state.SetAngle">
+<code class="sig-prename descclassname">state.</code><code class="sig-name descname">SetAngle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">angle</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#SetAngle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.SetAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set angle of servo. If the angle is lower than 30 degrees, the LED color is changed to red, otherwise is set
+to green.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>angle</strong> (<em>int</em>) – angle in degrees</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="state.SetLED">
+<code class="sig-prename descclassname">state.</code><code class="sig-name descname">SetLED</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">color</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#SetLED"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.SetLED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set LED color based on argument. Support only for red and green colors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>color</strong> (<em>str</em>) – define LED color</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="state.Unlocked">
+<em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">Unlocked</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Unlocked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Unlocked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#state.LockState" title="state.LockState"><code class="xref py py-class docutils literal notranslate"><span class="pre">state.LockState</span></code></a></p>
+<dl class="py attribute">
+<dt id="state.Unlocked.allowed">
+<code class="sig-name descname">allowed</code><em class="property"> = ['locked']</em><a class="headerlink" href="#state.Unlocked.allowed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="state.Unlocked.name">
+<code class="sig-name descname">name</code><em class="property"> = 'unlocked'</em><a class="headerlink" href="#state.Unlocked.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="state.Unlocked.servo_angle">
+<code class="sig-name descname">servo_angle</code><em class="property"> = 90</em><a class="headerlink" href="#state.Unlocked.servo_angle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="state.UserAuthenticationInfo">
+<em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">UserAuthenticationInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">who</span></em>, <em class="sig-param"><span class="n">success</span></em>, <em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#UserAuthenticationInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.UserAuthenticationInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Zamek Elektroniczny</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Alicja Gałaszkiewicz Mateusz Bugaj.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/source/state.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

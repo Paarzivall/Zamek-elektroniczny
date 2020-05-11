@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Spreech module &#8212; Zamek Elektroniczny 1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Spreech">
+<span id="spreech-module"></span><h1>Spreech module<a class="headerlink" href="#module-Spreech" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="Spreech.Spreech">
+<em class="property">class </em><code class="sig-prename descclassname">Spreech.</code><code class="sig-name descname">Spreech</code><a class="reference internal" href="../_modules/Spreech.html#Spreech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>initialize recognition operation</p>
+<dl class="py method">
+<dt id="Spreech.Spreech.controller">
+<code class="sig-name descname">controller</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Spreech.html#Spreech.controller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech.controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>method to control operations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True if password is valid or False if is not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Spreech.Spreech.get_password">
+<code class="sig-name descname">get_password</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Spreech.html#Spreech.get_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech.get_password" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>password from database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Spreech.Spreech.hash_password">
+<code class="sig-name descname">hash_password</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pin</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Spreech.html#Spreech.hash_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech.hash_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>method who hashing voice sample to checking in database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pin</strong> – converted voice sample to check</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>hashing password</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="Spreech.Spreech.listen_spreech">
+<code class="sig-name descname">listen_spreech</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Spreech.html#Spreech.listen_spreech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech.listen_spreech" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>source</strong> – microphone object</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>converted voice to string</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Zamek Elektroniczny</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Alicja Gałaszkiewicz Mateusz Bugaj.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/source/Spreech.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

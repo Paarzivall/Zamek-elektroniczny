@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Main module &#8212; Zamek Elektroniczny 1 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-Main">
+<span id="main-module"></span><h1>Main module<a class="headerlink" href="#module-Main" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="Main.User">
+<em class="property">class </em><code class="sig-prename descclassname">Main.</code><code class="sig-name descname">User</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="Main.User.authenticate">
+<code class="sig-name descname">authenticate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#User.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.User.authenticate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Main.User.authenticated">
+<em class="property">property </em><code class="sig-name descname">authenticated</code><a class="headerlink" href="#Main.User.authenticated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Main.User.control_lock">
+<code class="sig-name descname">control_lock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">verification_attempts</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#User.control_lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.User.control_lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Main.User.face_verified">
+<em class="property">property </em><code class="sig-name descname">face_verified</code><a class="headerlink" href="#Main.User.face_verified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Main.User.pass_verified">
+<em class="property">property </em><code class="sig-name descname">pass_verified</code><a class="headerlink" href="#Main.User.pass_verified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Main.User.pin_verified">
+<em class="property">property </em><code class="sig-name descname">pin_verified</code><a class="headerlink" href="#Main.User.pin_verified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Main.User.speech2_verified">
+<em class="property">property </em><code class="sig-name descname">speech2_verified</code><a class="headerlink" href="#Main.User.speech2_verified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="Main.User.speech_verified">
+<em class="property">property </em><code class="sig-name descname">speech_verified</code><a class="headerlink" href="#Main.User.speech_verified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="Main.analyze_spreech">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">analyze_spreech</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#analyze_spreech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.analyze_spreech" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>page with starter for sound recognize mechanism</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Main.block">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">block</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.block" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>block page and starting website timeout mechanism</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Main.close_lock">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">close_lock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#close_lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.close_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Closes lock.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>redirects to main page</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Main.face_verification">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">face_verification</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#face_verification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.face_verification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts face recognition process, if face is verified redirects to main page.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>redirects to main page or block page</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Main.main_page">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">main_page</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#main_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.main_page" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>main page if failed counter is valid or blocking page if is not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Main.open_lock">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">open_lock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#open_lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.open_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens lock.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>redirects to main page</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Main.password_verification">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">password_verification</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#password_verification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.password_verification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display website with login form. If correct password is submitted redirects to main_page</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>form page id failed counter is valid or blocking page if is not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="Main.speech_verification">
+<code class="sig-prename descclassname">Main.</code><code class="sig-name descname">speech_verification</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Main.html#speech_verification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Main.speech_verification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts speech verification, if speech is verified redirects to main_page</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>redirects to main page or block page</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Zamek Elektroniczny</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Alicja Gałaszkiewicz Mateusz Bugaj.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/source/Main.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
