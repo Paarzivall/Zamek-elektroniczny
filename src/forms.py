@@ -4,6 +4,9 @@ from wtforms.validators import DataRequired, Length, EqualTo
 
 
 class LoginForm(FlaskForm):
+    """
+    LoginForm used in HTML for password verification.
+    """
     user = StringField('User',
                         validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])

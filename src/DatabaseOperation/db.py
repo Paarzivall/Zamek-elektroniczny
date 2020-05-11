@@ -5,10 +5,22 @@ import os
 
 class DataBase:
     def __init__(self, db_filename='Test.db'):
+        """
+        Init method of DataBase class.
+
+        :param db_filename: defines path and name of db file
+        :type db_filename: str
+        """
         self.db_filename = db_filename
         self.conn = None
 
     def __enter__(self):
+        """
+        Method enter for context manager. Call _existing method to setup db connection.
+
+        :return: self
+        :rtype: DataBase
+        """
         self._existing()
         return self
 
@@ -17,7 +29,12 @@ class DataBase:
 
     def _hash_pass(self, passwd):
         """
-            hashuje piny żeby porównać z zapisanym w bazie
+        Return hashed password.
+
+        :param passwd: password to be hashed
+        :type passwd: str
+        :return: hashed password
+        :rtype: str
         """
         # pin = 1234 # default zapisany w bazie
         hasher = hashlib.sha256()
@@ -25,6 +42,13 @@ class DataBase:
         return hasher.hexdigest()
 
     def _existing(self):
+        """
+        Checks if database with name defined in attribute db_filename exists, if not create new database with needed
+        tables and fill tables with default values.
+
+        :return:
+        :rtype:
+        """
         if not os.path.exists(self.db_filename):
             self.conn = sqlite3.connect(self.db_filename)
             print('No schema exists.')
@@ -48,10 +72,28 @@ class DataBase:
             print('DB exists.')
 
     def add_password(self, user='Name', passwd="0000"):
+        """
+        Adds record to table "PASSWD_VERIFICATION" in database.
+
+        :param user: name of the user
+        :type user: str
+        :param passwd: password of the user
+        :type passwd: str
+        :return: None
+        :rtype: None
+        """
         self.conn.execute(f"INSERT INTO PASSWD_VERIFICATION (ID, USER, PASSWORD) VALUES (1, '{user}', '{self._hash_pass(passwd)}')")
         self.conn.commit()
 
     def read_password(self, user):
+        """
+        Reads record from the table "PASSWD_VERIFICATION" in database.
+
+        :param user: name of the user
+        :type user: str
+        :return: tuple with database record
+        :rtype: tuple
+        """
         print('checking in db')
         cursor = self.conn.cursor()
         cursor.execute(f"select ID, USER, PASSWORD from PASSWD_VERIFICATION where USER='{user}'")
@@ -59,6 +101,14 @@ class DataBase:
             return ID, USER, PASSWORD
 
     def read_record(self, user):
+        """
+        Read record from the table "RECORDS" in database.
+
+        :param user: name of the user
+        :type user: str
+        :return: tuple with database record
+        :rtype: tuple
+        """
         print('checking in db')
         cursor = self.conn.cursor()
         cursor.execute(f"select ID, USER, PIN from RECORDS where USER='{user}'")
@@ -68,6 +118,14 @@ class DataBase:
 
 
 def singleton(class_):
+    """
+    Function for decorating classes which need to be singleton.
+
+    :param class_: Decorated class which needs to be singleton.
+    :type class_: object
+    :return: instance of class
+    :rtype: object
+    """
     instances = {}
 
     def getinstance(*args, **kwargs):
@@ -82,18 +140,40 @@ class Proxy:
     proxy_state_pin = None
 
     def __init__(self, db_object):
+        """
+        Init method for abstract Proxy class.
+
+        :param db_object: Instance of DataBase class
+        :type db_object: DataBase
+        """
         self.db_object = db_object
 
 
 @singleton
 class DatabaseProxy(Proxy):
     def read_password(self, user):
+        """
+        Proxy method for reading record with password for a given user.
+
+        :param user: name og the user
+        :type user: str
+        :return: DataBase record
+        :rtype: tuple
+        """
         if self.proxy_state is None:
             self.db_object._existing()
             self.proxy_state = self.db_object.read_password(user)
         return self.proxy_state
 
     def read_record(self, user):
+        """
+        Proxy method for reading record with pin for a given user.
+
+        :param user: name og the user
+        :type user: str
+        :return: DataBase record
+        :rtype: tuple
+        """
         if self.proxy_state_pin is None:
             self.db_object._existing()
             self.proxy_state_pin = self.db_object.read_record(user)
@@ -109,6 +189,14 @@ class DatabaseProxy(Proxy):
 
 class Check:
     def __init__(self, name, passwd):
+        """
+        Init method for Check class which is used for pin verification.
+
+        :param name: name og the user
+        :type name: str
+        :param passwd: password provided by user
+        :type passwd: str
+        """
         self.name = name
         self.passwd = passwd
         with DatabaseProxy(DataBase('databases/zamek.db')) as read:
@@ -117,6 +205,12 @@ class Check:
 
     @property
     def verified(self):
+        """
+        Check if password provided by user is equal with password from DataBase.
+
+        :return: verification result
+        :rtype: bool
+        """
         if self.record is not None:
             return self.record[2] == self.passwd
         return False
