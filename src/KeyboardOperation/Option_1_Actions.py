@@ -3,10 +3,11 @@ import hashlib
 
 
 class UserPasswordVerification:
-    def __init__(self, user, passwd):
+    def __init__(self, user, passwd, db_file='databases/zamek.db'):
         self.user = user
         self.passwd = passwd
         self._verified = None
+        self.__db_file = db_file
 
     @staticmethod
     def _hash_pass(passwd):
@@ -27,8 +28,9 @@ class UserPasswordVerification:
 
     def __verify(self):
         self._verified = None
-        with DatabaseProxy(DataBase('databases/zamek.db')) as db:
+        with DatabaseProxy(DataBase(self.__db_file)) as db:
             db_record = db.read_password(self.user)
+            print(db_record)
             if db_record is not None:
                 if db_record[-1] == self.passwd:
                     self._verified = True

@@ -4,7 +4,7 @@ import os
 
 
 class DataBase:
-    def __init__(self, db_filename='Test.db'):
+    def __init__(self, db_filename='tests/Test.db'):
         """
         Init method of DataBase class.
 
@@ -27,7 +27,8 @@ class DataBase:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.conn.close()
 
-    def _hash_pass(self, passwd):
+    @staticmethod
+    def _hash_pass(passwd):
         """
         Return hashed password.
 
@@ -163,7 +164,8 @@ class DatabaseProxy(Proxy):
         if self.proxy_state is None:
             self.db_object._existing()
             self.proxy_state = self.db_object.read_password(user)
-        return self.proxy_state
+
+        return self.proxy_state if self.proxy_state is not None and self.proxy_state[1] == user else None
 
     def read_record(self, user):
         """
@@ -178,7 +180,7 @@ class DatabaseProxy(Proxy):
             self.db_object._existing()
             self.proxy_state_pin = self.db_object.read_record(user)
         print(f"pin record: {self.proxy_state_pin}")
-        return self.proxy_state_pin
+        return self.proxy_state_pin if self.proxy_state_pin is not None and self.proxy_state_pin[1] == user else None
 
     def __enter__(self):
         return self
@@ -188,7 +190,7 @@ class DatabaseProxy(Proxy):
 
 
 class Check:
-    def __init__(self, name, passwd):
+    def __init__(self, name, passwd, db_file='databases/zamek.db'):
         """
         Init method for Check class which is used for pin verification.
 
@@ -199,9 +201,8 @@ class Check:
         """
         self.name = name
         self.passwd = passwd
-        with DatabaseProxy(DataBase('databases/zamek.db')) as read:
+        with DatabaseProxy(DataBase(db_file)) as read:
             self.record = read.read_record(self.name)
-            print(self.record)
 
     @property
     def verified(self):
