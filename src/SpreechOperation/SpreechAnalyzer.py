@@ -1,3 +1,7 @@
+"""
+Main method to analyze spreech frequency etc.
+"""
+
 import wave
 import librosa.display
 from dtw import dtw
@@ -23,7 +27,9 @@ class SpreechAnalyzer:
     def recognize(self):
         """
         recording for 3 second and save sample as tmp.wav
+
         :return: method for checking valid sample
+        :rtype: SpreechAnalyzer because this is method of this class
         """
         chunk = 1024  # Record in chunks of 1024 samples
         sample_format = pyaudio.paInt16  # 16 bits per sample
@@ -66,7 +72,9 @@ class SpreechAnalyzer:
     def controller():
         """
         method who checking voice samples
+
         :return: True if sample is valid or False if samle is not valid
+        :rtype: bool
         """
 
         y1, sr1 = librosa.load('sounds/probka1.wav')

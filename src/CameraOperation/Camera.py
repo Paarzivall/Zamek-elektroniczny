@@ -1,3 +1,8 @@
+"""
+    Main module using to face recognize.
+    Very simple because Raspberry Pi 3 can't working with streaming to website.
+"""
+
 import face_recognition
 import subprocess
 
@@ -7,9 +12,21 @@ class VideoCamera(object):
         self.action = False
 
     def get_action(self):
+        """
+            method to getting actual state of object in this class
+
+        :return: class object
+        :rtype: VideoCamera
+        """
         return self.action
 
     def get_frame(self):
+        """
+        compare face from image with saving images("ja.png") from main folder location
+
+        :return: True if face is rocognize or false if is not
+        :rtype: bool
+        """
         picture_of_me = face_recognition.load_image_file("ja.jpeg")
         my_face_encoding = face_recognition.face_encodings(picture_of_me)[0]
 

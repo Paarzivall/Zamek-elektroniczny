@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Spreech module &#8212; Zamek Elektroniczny 1 documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -13,37 +13,43 @@
     <script src="../_static/doctools.js"></script>
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-   
-  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
-  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Zamek Elektroniczny 1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="module-Spreech">
 <span id="spreech-module"></span><h1>Spreech module<a class="headerlink" href="#module-Spreech" title="Permalink to this headline">¶</a></h1>
+<p>Main method to management password recognize spoken by user</p>
 <dl class="py class">
 <dt id="Spreech.Spreech">
 <em class="property">class </em><code class="sig-prename descclassname">Spreech.</code><code class="sig-name descname">Spreech</code><a class="reference internal" href="../_modules/Spreech.html#Spreech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>initialize recognition operation</p>
 <dl class="py method">
 <dt id="Spreech.Spreech.controller">
 <code class="sig-name descname">controller</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Spreech.html#Spreech.controller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech.controller" title="Permalink to this definition">¶</a></dt>
-<dd><p>method to control operations</p>
+<dd><p>main method of this class. Management recognization of password</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>True if password is valid or False if is not</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -51,11 +57,13 @@
 <dl class="py method">
 <dt id="Spreech.Spreech.get_password">
 <code class="sig-name descname">get_password</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Spreech.html#Spreech.get_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech.get_password" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>get password from database</p>
+<dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>password from database</p>
+<dd class="field-odd"><p>password</p>
 </dd>
 </dl>
+<p>::rtype: string</p>
 </dd></dl>
 
 <dl class="py method">
@@ -69,18 +77,25 @@
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>hashing password</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>hasher</p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt id="Spreech.Spreech.listen_spreech">
 <code class="sig-name descname">listen_spreech</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Spreech.html#Spreech.listen_spreech"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Spreech.Spreech.listen_spreech" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>listening sounds from microphone and recognize using google API</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>source</strong> – microphone object</p>
+<dd class="field-odd"><p><strong>source</strong> (<em>spreech_recognition.Microphone</em><em>(</em><em>)</em>) – microphone object</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>converted voice to string</p>
+<dd class="field-even"><p>converted voice</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>string</p>
 </dd>
 </dl>
 </dd></dl>
@@ -91,29 +106,17 @@
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="../index.html">Zamek Elektroniczny</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="../index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/source/Spreech.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -124,32 +127,25 @@
     </div>
 </div>
 <script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2020, Alicja Gałaszkiewicz Mateusz Bugaj.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="../_sources/source/Spreech.rst.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Zamek Elektroniczny 1 documentation</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Mateusz Bugaj Alicja Gałaszkiewicz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
   </body>
 </html>

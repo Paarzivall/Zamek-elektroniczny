@@ -1,3 +1,7 @@
+"""
+Class to management connections and operation in database
+"""
+
 from src.DatabaseOperation.db import DataBase, DatabaseProxy
 import hashlib
 
@@ -11,7 +15,10 @@ class UserPasswordVerification:
     @staticmethod
     def _hash_pass(passwd):
         """
-            hashuje piny żeby porównać z zapisanym w bazie
+
+        :param passwd:
+        :return: hashing password
+        :rtype: hasher
         """
         hasher = hashlib.sha256()
         hasher.update(bytes(str(passwd), encoding="utf-8"))
@@ -19,13 +26,33 @@ class UserPasswordVerification:
 
     @property
     def passwd(self):
+        """
+        getting object of this class
+
+        :return: password
+        :rtype: hasher
+        """
         return self._passwd
 
     @passwd.setter
     def passwd(self, passwd):
+        """
+        setter using to set hashing password as object of this class
+
+        :param passwd: password
+        :type passwd: string
+        :return: None
+        :rtype: None
+        """
         self._passwd = self._hash_pass(passwd)
 
     def __verify(self):
+        """
+        checking if password is correct: if is setting variable to True else setting to False
+
+        :return: None
+        :rtype: None
+        """
         self._verified = None
         with DatabaseProxy(DataBase('databases/zamek.db')) as db:
             db_record = db.read_password(self.user)
@@ -39,6 +66,12 @@ class UserPasswordVerification:
 
     @property
     def verified(self):
+        """
+        getting information about user
+
+        :return: variable with information about authentication authentication
+        :rtype: bool
+        """
         self.__verify()
         return self._verified
 
