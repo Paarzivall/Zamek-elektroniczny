@@ -18,6 +18,9 @@ failed = FailedCounter.FailedCounter.get_instance()
 
 
 class User:
+    """
+    Class representing user in web app.
+    """
     def __init__(self, lock, name=None,):
         self.name = name
         self.lock = lock

@@ -7,6 +7,9 @@ import hashlib
 
 
 class UserPasswordVerification:
+    """
+    Class used for authenticating user with password provided via web application.
+    """
     def __init__(self, user, passwd, db_file='databases/zamek.db'):
         self.user = user
         self.passwd = passwd

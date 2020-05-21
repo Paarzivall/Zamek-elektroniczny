@@ -4,6 +4,9 @@ import os
 
 
 class DataBase:
+    """
+    This class allows connection to sqlite database with context manager.
+    """
     def __init__(self, db_filename='tests/Test.db'):
         """
         Init method of DataBase class.
@@ -137,6 +140,9 @@ def singleton(class_):
 
 
 class Proxy:
+    """
+    Abstract class for proxy design pattern.
+    """
     proxy_state = None
     proxy_state_pin = None
 
@@ -152,6 +158,9 @@ class Proxy:
 
 @singleton
 class DatabaseProxy(Proxy):
+    """
+    This class is used for reading password and pin from database with proxy design pattern
+    """
     def read_password(self, user):
         """
         Proxy method for reading record with password for a given user.
@@ -190,6 +199,9 @@ class DatabaseProxy(Proxy):
 
 
 class Check:
+    """
+    This class is used for checking if user has provided correct pin via keybord attached to Raspberry Pi.
+    """
     def __init__(self, name, passwd, db_file='databases/zamek.db'):
         """
         Init method for Check class which is used for pin verification.
