@@ -1,19 +1,25 @@
+"""
+Main method to management password recognize spoken by user
+"""
+
 import speech_recognition as sr
 import sqlite3 as lite
 import hashlib
 
 
 class Spreech(object):
-    """
-    initialize recognition operation
-    """
     def __init__(self):
+        """
+        Init this module. Can have a lot of instances
+        """
         self.recognizer = sr.Recognizer()
 
     def controller(self):
         """
-        method to control operations
+        main method of this class. Management recognization of password
+
         :return: True if password is valid or False if is not
+        :rtype: bool
         """
         with sr.Microphone() as source:
             while 1:
@@ -25,8 +31,10 @@ class Spreech(object):
     def hash_password(self, pin):
         """
         method who hashing voice sample to checking in database
+
         :param pin: converted voice sample to check
         :return: hashing password
+        :rtype: hasher
         """
         try:
             hasher = hashlib.sha256()
@@ -37,7 +45,10 @@ class Spreech(object):
 
     def get_password(self):
         """
-        :return: password from database
+        get password from database
+
+        :return: password
+        ::rtype: string
         """
         # pin = self.hash_pin("litwo ojczyzno moja") # default password
         con = lite.connect('databases/zamek_elektroniczny.db')
@@ -48,9 +59,12 @@ class Spreech(object):
 
     def listen_spreech(self, source):
         """
+        listening sounds from microphone and recognize using google API
 
         :param source: microphone object
-        :return: converted voice to string
+        :type source: spreech_recognition.Microphone()
+        :return: converted voice
+        :rtype: string
         """
         try:
             audio = self.recognizer.listen(source)

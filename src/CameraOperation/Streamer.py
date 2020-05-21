@@ -1,3 +1,7 @@
+"""
+Class using to streaming on website camera image
+"""
+
 import cv2
 import threading
 import socket
@@ -9,6 +13,12 @@ import numpy
 
 class Streamer (threading.Thread):
     def __init__(self, hostname, port):
+        """
+        initialize class
+
+        :param hostname: ip address of us server
+        :param port: port using to accessed to us server
+        """
         threading.Thread.__init__(self)
 
         self.hostname = hostname
@@ -17,6 +27,12 @@ class Streamer (threading.Thread):
         self.jpeg = None
 
     def run(self):
+        """
+        main method to management streaming to website camera image ofter recognize
+
+        :return: None
+        :rtype: None
+        """
         self.isRunning = True
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print('Socket created')
@@ -55,10 +71,28 @@ class Streamer (threading.Thread):
             self.connected = False
 
     def stop(self):
+        """
+        setting variable to False
+
+        :return: None
+        :rtype: None
+        """
         self.isRunning = False
 
     def client_connected(self):
+        """
+        getting information about client connestions
+
+        :return: connections info
+        :rtype: bool
+        """
         return self.connected
 
     def get_jpeg(self):
+        """
+        method to get converted picture from camera
+
+        :return: converted image
+        :rtype: cv2
+        """
         return self.jpeg.tobytes()

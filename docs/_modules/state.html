@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>state &#8212; Zamek Elektroniczny 1 documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Zamek Elektroniczny 1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for state</h1><div class="highlight"><pre>
+<span></span><span class="c1"># import RPi.GPIO as GPIO</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="c1"># GPIO.setmode(GPIO.BCM)</span>
+<span class="c1"># GPIO.setup(17, GPIO.OUT)</span>
+<span class="c1"># GPIO.setup(21, GPIO.OUT)</span>
+<span class="c1"># GPIO.setup(26, GPIO.OUT)</span>
+
+
+<div class="viewcode-block" id="SetAngle"><a class="viewcode-back" href="../source/state.html#state.SetAngle">[docs]</a><span class="k">def</span> <span class="nf">SetAngle</span><span class="p">(</span><span class="n">angle</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set angle of servo. If the angle is lower than 30 degrees, the LED color is changed to red, otherwise is set</span>
+<span class="sd">    to green.</span>
+
+<span class="sd">    :param angle: angle in degrees</span>
+<span class="sd">    :type angle: int</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">angle</span> <span class="o">+</span> <span class="n">offset</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;setting angle on servo: </span><span class="si">{</span><span class="n">angle</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="n">SetLED</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">SetLED</span><span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">)</span></div>
+
+<span class="c1">#    pwm = GPIO.PWM(17, 50)</span>
+<span class="c1">#    pwm.start(0)</span>
+<span class="c1">#    duty = angle / 18 + 2</span>
+<span class="c1">#    GPIO.output(17, True)</span>
+<span class="c1">#    pwm.ChangeDutyCycle(duty)</span>
+<span class="c1">#    time.sleep(0.5)</span>
+<span class="c1">#    pwm.stop()</span>
+
+
+<div class="viewcode-block" id="SetLED"><a class="viewcode-back" href="../source/state.html#state.SetLED">[docs]</a><span class="k">def</span> <span class="nf">SetLED</span><span class="p">(</span><span class="n">color</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set LED color based on argument. Support only for red and green colors.</span>
+
+<span class="sd">    :param color: define LED color</span>
+<span class="sd">    :type color: str</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span><span class="p">:</span>
+        <span class="k">pass</span>
+ <span class="c1">#       GPIO.output(21, GPIO.LOW)</span>
+ <span class="c1">#       GPIO.output(26, GPIO.HIGH)</span>
+    <span class="k">if</span> <span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;green&#39;</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+<span class="c1">#        GPIO.output(26, GPIO.LOW)</span>
+<span class="c1">#        GPIO.output(21, GPIO.HIGH)</span>
+
+
+<div class="viewcode-block" id="LockState"><a class="viewcode-back" href="../source/state.html#state.LockState">[docs]</a><span class="k">class</span> <span class="nc">LockState</span><span class="p">:</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;state&quot;</span>
+    <span class="n">allowed</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lock</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method for LockState.</span>
+
+<span class="sd">        :param lock: lock instance</span>
+<span class="sd">        :type lock: Lock</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">lock</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lock</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__lock_log</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LockState.switch"><a class="viewcode-back" href="../source/state.html#state.LockState.switch">[docs]</a>    <span class="k">def</span> <span class="nf">switch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Switch state of the Lock to the new state.</span>
+
+<span class="sd">        :param state: define state (Locked, Unlocked)</span>
+<span class="sd">        :type state: LockState</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allowed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__lock_log</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;[LockState Log] Current: </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s1"> =&gt; switching to </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1"> not possible.&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__lock_log</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method to print logs. If the message is type of string, msg is printed.</span>
+
+<span class="sd">        :param msg: Message to print.</span>
+<span class="sd">        :type msg: str</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="Locked"><a class="viewcode-back" href="../source/state.html#state.Locked">[docs]</a><span class="k">class</span> <span class="nc">Locked</span><span class="p">(</span><span class="n">LockState</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span>
+    <span class="n">allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;unlocked&#39;</span><span class="p">]</span>
+    <span class="n">servo_angle</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="Unlocked"><a class="viewcode-back" href="../source/state.html#state.Unlocked">[docs]</a><span class="k">class</span> <span class="nc">Unlocked</span><span class="p">(</span><span class="n">LockState</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;unlocked&quot;</span>
+    <span class="n">allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span>
+    <span class="n">servo_angle</span> <span class="o">=</span> <span class="mi">90</span></div>
+
+
+<div class="viewcode-block" id="Event"><a class="viewcode-back" href="../source/state.html#state.Event">[docs]</a><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">item</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LockStateInfo"><a class="viewcode-back" href="../source/state.html#state.LockStateInfo">[docs]</a><span class="k">class</span> <span class="nc">LockStateInfo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who_change</span><span class="p">,</span> <span class="n">lock_action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method for LockStateInfo. The instance of the class is passed to Mediator.</span>
+
+<span class="sd">        :param who_change: User who change state.</span>
+<span class="sd">        :type who_change: str</span>
+<span class="sd">        :param lock_action: State has been changed.</span>
+<span class="sd">        :type lock_action: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">who_change_state</span> <span class="o">=</span> <span class="n">who_change</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock_action</span> <span class="o">=</span> <span class="n">lock_action</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lock_name</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="UserAuthenticationInfo"><a class="viewcode-back" href="../source/state.html#state.UserAuthenticationInfo">[docs]</a><span class="k">class</span> <span class="nc">UserAuthenticationInfo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="n">success</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method for UserAuthenticationInfo. The instance of the class is passed to Mediator.</span>
+
+<span class="sd">        :param who: User name.</span>
+<span class="sd">        :type who: str</span>
+<span class="sd">        :param success: Login status.</span>
+<span class="sd">        :type success: bool</span>
+<span class="sd">        :param level: Authentication level.</span>
+<span class="sd">        :type level: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">who</span> <span class="o">=</span> <span class="n">who</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="n">success</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level</span> <span class="o">=</span> <span class="n">level</span></div>
+
+
+<div class="viewcode-block" id="Lock"><a class="viewcode-back" href="../source/state.html#state.Lock">[docs]</a><span class="k">class</span> <span class="nc">Lock</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; A class representing a lock &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method of the lock.</span>
+
+<span class="sd">        :param name: Defines name of the lock.</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">Locked</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allowed_users</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="Lock.change"><a class="viewcode-back" href="../source/state.html#state.Lock.change">[docs]</a>    <span class="k">def</span> <span class="nf">change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Change the lock state and calls Mediator events.</span>
+
+<span class="sd">        :param state: define state which needs to be set.</span>
+<span class="sd">        :type state: LockState</span>
+<span class="sd">        :param args: Instance of LockStateInfo.</span>
+<span class="sd">        :type args: LockStateInfo</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">switch</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">lock_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">SetAngle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">servo_angle</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Lock.authentication"><a class="viewcode-back" href="../source/state.html#state.Lock.authentication">[docs]</a>    <span class="k">def</span> <span class="nf">authentication</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calls Mediator events when user is authenticated.</span>
+
+<span class="sd">        :param args: Contains information which user tries to log in and on which level.</span>
+<span class="sd">        :type args: UserAuthenticationInfo</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MasterLog"><a class="viewcode-back" href="../source/state.html#state.MasterLog">[docs]</a><span class="k">class</span> <span class="nc">MasterLog</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lock</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Init method for MasterLog.</span>
+
+<span class="sd">        :param lock: Instance of log to which MasterLog need to be connected.</span>
+<span class="sd">        :type lock: Lock</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lock</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_log</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_logs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auth_logs</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="MasterLog.save_log"><a class="viewcode-back" href="../source/state.html#state.MasterLog.save_log">[docs]</a>    <span class="k">def</span> <span class="nf">save_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method prints logs and saves them to proper attributes.</span>
+
+<span class="sd">        :param args: Information which need to be printed and stored in state_logs or auth_logs.</span>
+<span class="sd">        :type args: LockStateInfo or UserAuthenticationInfo</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">LockStateInfo</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;[Master Log] State of lock: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">lock_name</span><span class="si">}</span><span class="s1"> changed to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">lock_action</span><span class="si">}</span><span class="s1"> by: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">who_change_state</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">state_logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">UserAuthenticationInfo</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;[Authentication Log] User </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">who</span><span class="si">}</span><span class="s1"> tried to log in with success: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">success</span><span class="si">}</span><span class="s1">, &#39;</span> \
+                  <span class="sa">f</span><span class="s1">&#39;auth-level: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">level</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">auth_logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div></div>
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Zamek Elektroniczny 1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Mateusz Bugaj Alicja Gałaszkiewicz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>

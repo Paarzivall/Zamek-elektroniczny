@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SpreechAnalyzer &#8212; Zamek Elektroniczny 1 documentation</title>
+    <link rel="stylesheet" href="../_static/corlab.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Zamek Elektroniczny 1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for SpreechAnalyzer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Main method to analyze spreech frequency etc.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">wave</span>
+<span class="kn">import</span> <span class="nn">librosa.display</span>
+<span class="kn">from</span> <span class="nn">dtw</span> <span class="kn">import</span> <span class="n">dtw</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">norm</span>
+<span class="kn">import</span> <span class="nn">pyaudio</span>
+
+<span class="n">FORMAT</span> <span class="o">=</span> <span class="n">pyaudio</span><span class="o">.</span><span class="n">paInt16</span>
+<span class="n">CHANNELS</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">RATE</span> <span class="o">=</span> <span class="mi">32000</span>
+<span class="n">CHUNK</span> <span class="o">=</span> <span class="mi">960</span>
+<span class="n">RECORD_SECONDS</span> <span class="o">=</span> <span class="mi">3</span>
+
+
+<div class="viewcode-block" id="SpreechAnalyzer"><a class="viewcode-back" href="../source/SpreechAnalyzer.html#SpreechAnalyzer.SpreechAnalyzer">[docs]</a><span class="k">class</span> <span class="nc">SpreechAnalyzer</span><span class="p">:</span>
+    <span class="n">OUTPUT_FILE</span> <span class="o">=</span> <span class="s1">&#39;sounds/tmp.wav&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initialize object to microphone management</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span> <span class="o">=</span> <span class="n">pyaudio</span><span class="o">.</span><span class="n">PyAudio</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SpreechAnalyzer.recognize"><a class="viewcode-back" href="../source/SpreechAnalyzer.html#SpreechAnalyzer.SpreechAnalyzer.recognize">[docs]</a>    <span class="k">def</span> <span class="nf">recognize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        recording for 3 second and save sample as tmp.wav</span>
+
+<span class="sd">        :return: method for checking valid sample</span>
+<span class="sd">        :rtype: SpreechAnalyzer because this is method of this class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="mi">1024</span>  <span class="c1"># Record in chunks of 1024 samples</span>
+        <span class="n">sample_format</span> <span class="o">=</span> <span class="n">pyaudio</span><span class="o">.</span><span class="n">paInt16</span>  <span class="c1"># 16 bits per sample</span>
+        <span class="n">channels</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="mi">44100</span>  <span class="c1"># Record at 44100 samples per second</span>
+        <span class="n">seconds</span> <span class="o">=</span> <span class="mi">3</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Recording&#39;</span><span class="p">)</span>
+
+        <span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="n">sample_format</span><span class="p">,</span>
+                                 <span class="n">channels</span><span class="o">=</span><span class="n">channels</span><span class="p">,</span>
+                                 <span class="n">rate</span><span class="o">=</span><span class="n">fs</span><span class="p">,</span>
+                                 <span class="n">frames_per_buffer</span><span class="o">=</span><span class="n">chunk</span><span class="p">,</span>
+                                 <span class="nb">input</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">fs</span> <span class="o">/</span> <span class="n">chunk</span> <span class="o">*</span> <span class="n">seconds</span><span class="p">)):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Stop and close the stream</span>
+        <span class="n">stream</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
+        <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="c1"># Terminate the PortAudio interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Finished recording&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Save the recorded data as a WAV file</span>
+        <span class="n">wf</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTPUT_FILE</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+        <span class="n">wf</span><span class="o">.</span><span class="n">setnchannels</span><span class="p">(</span><span class="n">channels</span><span class="p">)</span>
+        <span class="n">wf</span><span class="o">.</span><span class="n">setsampwidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">get_sample_size</span><span class="p">(</span><span class="n">sample_format</span><span class="p">))</span>
+        <span class="n">wf</span><span class="o">.</span><span class="n">setframerate</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
+        <span class="n">wf</span><span class="o">.</span><span class="n">writeframes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">frames</span><span class="p">))</span>
+        <span class="n">wf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SpreechAnalyzer.controller"><a class="viewcode-back" href="../source/SpreechAnalyzer.html#SpreechAnalyzer.SpreechAnalyzer.controller">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">controller</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        method who checking voice samples</span>
+
+<span class="sd">        :return: True if sample is valid or False if samle is not valid</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">y1</span><span class="p">,</span> <span class="n">sr1</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;sounds/probka1.wav&#39;</span><span class="p">)</span>
+        <span class="n">y3</span><span class="p">,</span> <span class="n">sr3</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;sounds/probka2.wav&#39;</span><span class="p">)</span>
+        <span class="n">y4</span><span class="p">,</span> <span class="n">sr4</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;sounds/probka3.wav&#39;</span><span class="p">)</span>
+        <span class="n">y2</span><span class="p">,</span> <span class="n">sr2</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;sounds/tmp.wav&#39;</span><span class="p">)</span>
+
+        <span class="n">mfcc1</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">sr1</span><span class="p">)</span>  <span class="c1"># Computing MFCC values</span>
+        <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">mfcc1</span><span class="p">)</span>
+        <span class="n">mfcc3</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y3</span><span class="p">,</span> <span class="n">sr3</span><span class="p">)</span>  <span class="c1"># Computing MFCC values</span>
+        <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">mfcc3</span><span class="p">)</span>
+        <span class="n">mfcc4</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y4</span><span class="p">,</span> <span class="n">sr4</span><span class="p">)</span>  <span class="c1"># Computing MFCC values</span>
+        <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">mfcc4</span><span class="p">)</span>
+        <span class="n">mfcc2</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="n">sr2</span><span class="p">)</span>
+        <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">mfcc2</span><span class="p">)</span>
+
+        <span class="n">dist</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">acc_cost</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">dtw</span><span class="p">(</span><span class="n">mfcc1</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">mfcc2</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">norm</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dist &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;=</span> <span class="mi">25000</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dist</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">acc_cost</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">dtw</span><span class="p">(</span><span class="n">mfcc3</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">mfcc2</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">norm</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dist &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;=</span> <span class="mi">25000</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dist</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">acc_cost</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">dtw</span><span class="p">(</span><span class="n">mfcc4</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">mfcc2</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">norm</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">,</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dist &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dist</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">dist</span> <span class="o">&lt;=</span> <span class="mi">25000</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">False</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">spreech</span> <span class="o">=</span> <span class="n">SpreechAnalyzer</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">spreech</span><span class="o">.</span><span class="n">recognize</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;speech verified&#39;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;not verified&#39;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Zamek Elektroniczny 1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Mateusz Bugaj Alicja Gałaszkiewicz.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.3.
+    </div>
+  </body>
+</html>
