@@ -54,6 +54,9 @@ def SetLED(color):
 
 
 class LockState:
+    """
+    This class implement state design pattern for Lock.
+    """
     name = "state"
     allowed = []
 
@@ -100,24 +103,36 @@ class LockState:
 
 
 class Locked(LockState):
+    """
+    This class defines Locked state of Lock.
+    """
     name = "locked"
     allowed = ['unlocked']
     servo_angle = 0
 
 
 class Unlocked(LockState):
+    """
+    This class defines Unlocked state of Lock.
+    """
     name = "unlocked"
     allowed = ['locked']
     servo_angle = 90
 
 
 class Event(list):
+    """
+    Event class for mediator desing pattern.
+    """
     def __call__(self, *args, **kwargs):
         for item in self:
             item(*args, **kwargs)
 
 
 class LockStateInfo:
+    """
+    Class used for passing data to mediator with information about LockState event.
+    """
     def __init__(self, who_change, lock_action):
         """
         Init method for LockStateInfo. The instance of the class is passed to Mediator.
@@ -133,6 +148,9 @@ class LockStateInfo:
 
 
 class UserAuthenticationInfo:
+    """
+    Class used for passing data to mediator with information about User Authentication event.
+    """
     def __init__(self, who, success, level=''):
         """
         Init method for UserAuthenticationInfo. The instance of the class is passed to Mediator.
@@ -150,7 +168,10 @@ class UserAuthenticationInfo:
 
 
 class Lock:
-    """ A class representing a lock """
+    """
+    A class representing a lock.
+    This class is also a mediator which is calling events when Lock state is change or user tries to authenticate.
+    """
 
     def __init__(self, name):
         """
@@ -194,6 +215,9 @@ class Lock:
 
 
 class MasterLog:
+    """
+    Class used in mediator design pattern, MasterLog subscribes events from Lock.
+    """
     def __init__(self, lock):
         """
         Init method for MasterLog.

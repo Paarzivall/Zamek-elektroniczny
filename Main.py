@@ -18,6 +18,9 @@ failed = FailedCounter.FailedCounter.get_instance()
 
 
 class User:
+    """
+    Class representing user in web app.
+    """
     def __init__(self, lock, name=None,):
         self.name = name
         self.lock = lock
@@ -101,14 +104,14 @@ class User:
 
     def control_lock(self, state, verification_attempts=0):
         args = LockStateInfo(self.name, state)
-        if not self.pin_verified and verification_attempts < 2:
+        if not self.pin_verified and verification_attempts < 3:
             self.authenticate()
             self.control_lock(state, verification_attempts=verification_attempts+1)
         elif self.pin_verified:
             self.lock.change(state, args)
 
     def authenticate(self):
-        for _ in range(2):
+        for _ in range(1):
             kp = Keypad(columnCount=3)
             seq = []
             for i in range(4):
