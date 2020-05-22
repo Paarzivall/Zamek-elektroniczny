@@ -39,13 +39,15 @@
 <dt id="state.Event">
 <em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">Event</code><a class="reference internal" href="../_modules/state.html#Event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+<p>Event class for mediator desing pattern.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="state.Lock">
 <em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">Lock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Lock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class representing a lock</p>
+<p>A class representing a lock.
+This class is also a mediator which is calling events when Lock state is change or user tries to authenticate.</p>
 <dl class="py method">
 <dt id="state.Lock.authentication">
 <code class="sig-name descname">authentication</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Lock.authentication"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Lock.authentication" title="Permalink to this definition">¶</a></dt>
@@ -89,6 +91,7 @@
 <dt id="state.LockState">
 <em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">LockState</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#LockState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.LockState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class implement state design pattern for Lock.</p>
 <dl class="py attribute">
 <dt id="state.LockState.allowed">
 <code class="sig-name descname">allowed</code><em class="property"> = []</em><a class="headerlink" href="#state.LockState.allowed" title="Permalink to this definition">¶</a></dt>
@@ -122,12 +125,14 @@
 <dt id="state.LockStateInfo">
 <em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">LockStateInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">who_change</span></em>, <em class="sig-param"><span class="n">lock_action</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#LockStateInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.LockStateInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used for passing data to mediator with information about LockState event.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="state.Locked">
 <em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">Locked</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Locked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Locked" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#state.LockState" title="state.LockState"><code class="xref py py-class docutils literal notranslate"><span class="pre">state.LockState</span></code></a></p>
+<p>This class defines Locked state of Lock.</p>
 <dl class="py attribute">
 <dt id="state.Locked.allowed">
 <code class="sig-name descname">allowed</code><em class="property"> = ['unlocked']</em><a class="headerlink" href="#state.Locked.allowed" title="Permalink to this definition">¶</a></dt>
@@ -149,6 +154,7 @@
 <dt id="state.MasterLog">
 <em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">MasterLog</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#MasterLog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.MasterLog" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used in mediator design pattern, MasterLog subscribes events from Lock.</p>
 <dl class="py method">
 <dt id="state.MasterLog.save_log">
 <code class="sig-name descname">save_log</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#MasterLog.save_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.MasterLog.save_log" title="Permalink to this definition">¶</a></dt>
@@ -207,6 +213,7 @@ to green.</p>
 <dt id="state.Unlocked">
 <em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">Unlocked</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lock</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#Unlocked"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.Unlocked" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#state.LockState" title="state.LockState"><code class="xref py py-class docutils literal notranslate"><span class="pre">state.LockState</span></code></a></p>
+<p>This class defines Unlocked state of Lock.</p>
 <dl class="py attribute">
 <dt id="state.Unlocked.allowed">
 <code class="sig-name descname">allowed</code><em class="property"> = ['locked']</em><a class="headerlink" href="#state.Unlocked.allowed" title="Permalink to this definition">¶</a></dt>
@@ -228,6 +235,7 @@ to green.</p>
 <dt id="state.UserAuthenticationInfo">
 <em class="property">class </em><code class="sig-prename descclassname">state.</code><code class="sig-name descname">UserAuthenticationInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">who</span></em>, <em class="sig-param"><span class="n">success</span></em>, <em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/state.html#UserAuthenticationInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#state.UserAuthenticationInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used for passing data to mediator with information about User Authentication event.</p>
 </dd></dl>
 
 </div>

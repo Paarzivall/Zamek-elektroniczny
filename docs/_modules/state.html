@@ -91,6 +91,9 @@
 
 
 <div class="viewcode-block" id="LockState"><a class="viewcode-back" href="../source/state.html#state.LockState">[docs]</a><span class="k">class</span> <span class="nc">LockState</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class implement state design pattern for Lock.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;state&quot;</span>
     <span class="n">allowed</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -137,24 +140,36 @@
 
 
 <div class="viewcode-block" id="Locked"><a class="viewcode-back" href="../source/state.html#state.Locked">[docs]</a><span class="k">class</span> <span class="nc">Locked</span><span class="p">(</span><span class="n">LockState</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines Locked state of Lock.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;locked&quot;</span>
     <span class="n">allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;unlocked&#39;</span><span class="p">]</span>
     <span class="n">servo_angle</span> <span class="o">=</span> <span class="mi">0</span></div>
 
 
 <div class="viewcode-block" id="Unlocked"><a class="viewcode-back" href="../source/state.html#state.Unlocked">[docs]</a><span class="k">class</span> <span class="nc">Unlocked</span><span class="p">(</span><span class="n">LockState</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class defines Unlocked state of Lock.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;unlocked&quot;</span>
     <span class="n">allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">]</span>
     <span class="n">servo_angle</span> <span class="o">=</span> <span class="mi">90</span></div>
 
 
 <div class="viewcode-block" id="Event"><a class="viewcode-back" href="../source/state.html#state.Event">[docs]</a><span class="k">class</span> <span class="nc">Event</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Event class for mediator desing pattern.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">item</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LockStateInfo"><a class="viewcode-back" href="../source/state.html#state.LockStateInfo">[docs]</a><span class="k">class</span> <span class="nc">LockStateInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class used for passing data to mediator with information about LockState event.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who_change</span><span class="p">,</span> <span class="n">lock_action</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Init method for LockStateInfo. The instance of the class is passed to Mediator.</span>
@@ -170,6 +185,9 @@
 
 
 <div class="viewcode-block" id="UserAuthenticationInfo"><a class="viewcode-back" href="../source/state.html#state.UserAuthenticationInfo">[docs]</a><span class="k">class</span> <span class="nc">UserAuthenticationInfo</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class used for passing data to mediator with information about User Authentication event.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">who</span><span class="p">,</span> <span class="n">success</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Init method for UserAuthenticationInfo. The instance of the class is passed to Mediator.</span>
@@ -187,7 +205,10 @@
 
 
 <div class="viewcode-block" id="Lock"><a class="viewcode-back" href="../source/state.html#state.Lock">[docs]</a><span class="k">class</span> <span class="nc">Lock</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; A class representing a lock &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class representing a lock.</span>
+<span class="sd">    This class is also a mediator which is calling events when Lock state is change or user tries to authenticate.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -231,6 +252,9 @@
 
 
 <div class="viewcode-block" id="MasterLog"><a class="viewcode-back" href="../source/state.html#state.MasterLog">[docs]</a><span class="k">class</span> <span class="nc">MasterLog</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class used in mediator design pattern, MasterLog subscribes events from Lock.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lock</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Init method for MasterLog.</span>

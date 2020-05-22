@@ -37,8 +37,9 @@
 <span id="db-module"></span><h1>db module<a class="headerlink" href="#module-db" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="db.Check">
-<em class="property">class </em><code class="sig-prename descclassname">db.</code><code class="sig-name descname">Check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">passwd</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/db.html#Check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#db.Check" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">db.</code><code class="sig-name descname">Check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">passwd</span></em>, <em class="sig-param"><span class="n">db_file</span><span class="o">=</span><span class="default_value">'databases/zamek.db'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/db.html#Check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#db.Check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is used for checking if user has provided correct pin via keybord attached to Raspberry Pi.</p>
 <dl class="py method">
 <dt id="db.Check.verified">
 <em class="property">property </em><code class="sig-name descname">verified</code><a class="headerlink" href="#db.Check.verified" title="Permalink to this definition">¶</a></dt>
@@ -57,8 +58,9 @@
 
 <dl class="py class">
 <dt id="db.DataBase">
-<em class="property">class </em><code class="sig-prename descclassname">db.</code><code class="sig-name descname">DataBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">db_filename</span><span class="o">=</span><span class="default_value">'Test.db'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/db.html#DataBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#db.DataBase" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">db.</code><code class="sig-name descname">DataBase</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">db_filename</span><span class="o">=</span><span class="default_value">'tests/Test.db'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/db.html#DataBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#db.DataBase" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class allows connection to sqlite database with context manager.</p>
 <dl class="py method">
 <dt id="db.DataBase.add_password">
 <code class="sig-name descname">add_password</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user</span><span class="o">=</span><span class="default_value">'Name'</span></em>, <em class="sig-param"><span class="n">passwd</span><span class="o">=</span><span class="default_value">'0000'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/db.html#DataBase.add_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#db.DataBase.add_password" title="Permalink to this definition">¶</a></dt>
@@ -124,6 +126,7 @@
 <dt id="db.Proxy">
 <em class="property">class </em><code class="sig-prename descclassname">db.</code><code class="sig-name descname">Proxy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">db_object</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/db.html#Proxy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#db.Proxy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract class for proxy design pattern.</p>
 <dl class="py attribute">
 <dt id="db.Proxy.proxy_state">
 <code class="sig-name descname">proxy_state</code><em class="property"> = None</em><a class="headerlink" href="#db.Proxy.proxy_state" title="Permalink to this definition">¶</a></dt>

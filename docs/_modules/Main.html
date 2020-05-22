@@ -55,6 +55,9 @@
 
 
 <div class="viewcode-block" id="User"><a class="viewcode-back" href="../source/Main.html#Main.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class representing user in web app.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lock</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">lock</span>
@@ -138,14 +141,14 @@
 
 <div class="viewcode-block" id="User.control_lock"><a class="viewcode-back" href="../source/Main.html#Main.User.control_lock">[docs]</a>    <span class="k">def</span> <span class="nf">control_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">verification_attempts</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="n">args</span> <span class="o">=</span> <span class="n">LockStateInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_verified</span> <span class="ow">and</span> <span class="n">verification_attempts</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_verified</span> <span class="ow">and</span> <span class="n">verification_attempts</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">authenticate</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">control_lock</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">verification_attempts</span><span class="o">=</span><span class="n">verification_attempts</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_verified</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">change</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="User.authenticate"><a class="viewcode-back" href="../source/Main.html#Main.User.authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">kp</span> <span class="o">=</span> <span class="n">Keypad</span><span class="p">(</span><span class="n">columnCount</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
             <span class="n">seq</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>

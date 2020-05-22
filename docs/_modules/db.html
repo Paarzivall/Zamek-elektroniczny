@@ -41,7 +41,10 @@
 
 
 <div class="viewcode-block" id="DataBase"><a class="viewcode-back" href="../source/db.html#db.DataBase">[docs]</a><span class="k">class</span> <span class="nc">DataBase</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_filename</span><span class="o">=</span><span class="s1">&#39;Test.db&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class allows connection to sqlite database with context manager.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_filename</span><span class="o">=</span><span class="s1">&#39;tests/Test.db&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Init method of DataBase class.</span>
 
@@ -64,7 +67,8 @@
     <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_hash_pass</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">passwd</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_hash_pass</span><span class="p">(</span><span class="n">passwd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return hashed password.</span>
 
@@ -173,6 +177,9 @@
 
 
 <div class="viewcode-block" id="Proxy"><a class="viewcode-back" href="../source/db.html#db.Proxy">[docs]</a><span class="k">class</span> <span class="nc">Proxy</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for proxy design pattern.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">proxy_state</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">proxy_state_pin</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -188,6 +195,9 @@
 
 <div class="viewcode-block" id="DatabaseProxy"><a class="viewcode-back" href="../source/db.html#db.DatabaseProxy">[docs]</a><span class="nd">@singleton</span>
 <span class="k">class</span> <span class="nc">DatabaseProxy</span><span class="p">(</span><span class="n">Proxy</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is used for reading password and pin from database with proxy design pattern</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">read_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Proxy method for reading record with password for a given user.</span>
@@ -200,7 +210,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">_existing</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">read_password</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">user</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">read_record</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -215,7 +226,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">_existing</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_object</span><span class="o">.</span><span class="n">read_record</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pin record: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">proxy_state_pin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">user</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span>
@@ -225,7 +236,10 @@
 
 
 <div class="viewcode-block" id="Check"><a class="viewcode-back" href="../source/db.html#db.Check">[docs]</a><span class="k">class</span> <span class="nc">Check</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">passwd</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is used for checking if user has provided correct pin via keybord attached to Raspberry Pi.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">passwd</span><span class="p">,</span> <span class="n">db_file</span><span class="o">=</span><span class="s1">&#39;databases/zamek.db&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Init method for Check class which is used for pin verification.</span>
 
@@ -236,9 +250,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">passwd</span> <span class="o">=</span> <span class="n">passwd</span>
-        <span class="k">with</span> <span class="n">DatabaseProxy</span><span class="p">(</span><span class="n">DataBase</span><span class="p">(</span><span class="s1">&#39;databases/zamek.db&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">read</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">DatabaseProxy</span><span class="p">(</span><span class="n">DataBase</span><span class="p">(</span><span class="n">db_file</span><span class="p">))</span> <span class="k">as</span> <span class="n">read</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">record</span> <span class="o">=</span> <span class="n">read</span><span class="o">.</span><span class="n">read_record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">record</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">verified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
