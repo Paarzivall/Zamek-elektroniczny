@@ -1,6 +1,6 @@
 Projekt zaliczneniowy w ramach kursu Projekt Inżynierski prowadzonego na Uniwersytecie Pedagogicznym im. KEN w Krakowie, na kierunku Informatyka.
 
-&nbsp;&nbsp;&nbsp;Celem projektu było skonstruowanie układu zamka elektronicznego uwzględniającego wielopozio-mową kontrolę dostępu. Zadaniem konstruktora było zaprojektowanie i zmontowanie układu z czte-rorostopniową kontrolą dostępu składającą się z następujących elementów:
+&nbsp;&nbsp;&nbsp;Celem projektu było skonstruowanie układu zamka elektronicznego uwzględniającego wielopoziomową kontrolę dostępu. Zadaniem konstruktora było zaprojektowanie i zmontowanie układu z czterorostopniową kontrolą dostępu składającą się z następujących elementów:
 * logowanie za pomocą nazwy użytkownika i hasła,
 * rozpoznawanie twarzy,
 * weryfikacji hasła głosowego oraz głosu użytkownika,
